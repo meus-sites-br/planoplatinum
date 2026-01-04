@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Gestão Clínica</title>
+    
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* =========================================
+           THEME: MODERN CLINIC PRO
+           ========================================= */
+        :root { 
+            --primary: #5e8b7e;       /* Verde Sálvia */
+            --primary-dark: #3a5c52;
+            --secondary: #eaddcf;     /* Bege Suave */
+            --bg-body: #f4f5f7;       /* Cinza Azulado mto claro */
+            --surface: #ffffff;
+            
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --blue: #3b82f6;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --sidebar-width: 260px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; outline:none; }
+        
+        body { 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            height: 100vh; 
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen { 
+            position: fixed; inset: 0; 
+            background: #fcfcfc;
+            background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 9999; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .login-card {
+            background: var(--surface); width: 100%; max-width: 400px; padding: 40px;
+            border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center;
+        }
+        .login-input { 
+            width: 100%; padding: 14px; background: #f8fafc; border: 1px solid var(--border); 
+            border-radius: 8px; margin-bottom: 15px; font-size: 1rem; transition: 0.3s;
+        }
+        .login-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(94, 139, 126, 0.1); }
+        
+        .btn-primary { 
+            background: var(--primary); color: #fff; border: none; padding: 14px; width: 100%;
+            border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width); background: var(--surface); height: 100%;
+            border-right: 1px solid var(--border); display: flex; flex-direction: column;
+            transition: 0.3s; z-index: 100; position: relative;
+        }
+        .logo-area {
+            padding: 30px; display: flex; align-items: center; gap: 10px;
+            font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary-dark);
+        }
+        .menu-list { flex: 1; padding: 0 15px; list-style: none; overflow-y: auto; }
+        .menu-item {
+            display: flex; align-items: center; gap: 12px; padding: 14px 20px;
+            color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: 0.2s;
+            margin-bottom: 5px; font-weight: 500;
+        }
+        .menu-item:hover, .menu-item.active { background: rgba(94, 139, 126, 0.08); color: var(--primary-dark); }
+        .menu-item i { font-size: 1.2rem; }
+        
+        .user-profile {
+            padding: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px;
+        }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: var(--primary-dark); font-weight: bold; }
+        
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        .top-bar {
+            background: var(--surface); padding: 15px 30px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 90;
+        }
+        .page-title h2 { font-size: 1.2rem; font-weight: 600; color: var(--text-main); }
+        .page-title p { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
+
+        .dashboard-container { padding: 30px; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+        /* KPI CARDS */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .kpi-card {
+            background: var(--surface); padding: 25px; border-radius: 16px; box-shadow: var(--shadow);
+            position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .kpi-icon { padding: 10px; background: rgba(94, 139, 126, 0.1); border-radius: 10px; color: var(--primary); font-size: 1.5rem; }
+        .kpi-value { font-size: 2rem; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
+        .kpi-label { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+        .kpi-trend { font-size: 0.8rem; color: var(--success); display: flex; align-items: center; gap: 4px; margin-top: 10px; font-weight: 600; }
+
+        /* CONTENT GRID */
+        .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        
+        /* TABLE SECTION */
+        .card-section { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 30px; }
+        .card-header { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-title { font-weight: 600; font-size: 1.1rem; }
+        
+        .search-box { padding: 15px 25px; border-bottom: 1px solid var(--border); background: #fafafa; }
+        .search-input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th { text-align: left; padding: 15px 25px; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; background: #f8fafc; font-weight: 600; }
+        td { padding: 18px 25px; border-bottom: 1px solid var(--border); color: var(--text-main); font-size: 0.9rem; }
+        tr:last-child td { border-bottom: none; }
+        
+        .client-cell { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--text-main); }
+        .client-avatar { width: 32px; height: 32px; background: #e0f2fe; color: #0284c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+        
+        /* STATUS SYSTEM */
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; cursor: pointer; transition: 0.2s; user-select: none; }
+        .status-badge:hover { filter: brightness(0.95); transform: scale(1.05); }
+        
+        .status-badge.future { background: #eef2ff; color: #4f46e5; } /* Agendado */
+        .status-badge.today { background: #fff7ed; color: #c2410c; } /* Hoje */
+        .status-badge.past { background: #f1f5f9; color: #64748b; } /* Concluído */
+        .status-badge.checked { background: #ecfdf5; color: #059669; } /* Na Sala/Check-in */
+        .status-badge.cancel { background: #fef2f2; color: #ef4444; } /* Cancelado */
+        
+        /* Patient Types */
+        .patient-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; background: #eee; color: #555; margin-left: 5px; font-weight: normal; }
+        .patient-tag.vip { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
+        .patient-tag.new { background: #dcfce7; color: #166534; }
+
+        .action-btn { 
+            padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; 
+            background: #fff; cursor: pointer; color: var(--text-main); font-size: 0.85rem; text-decoration: none; 
+            display: inline-flex; align-items: center; gap: 5px; transition: 0.2s;
+        }
+        .action-btn:hover { background: #f8fafc; border-color: var(--text-muted); }
+        
+        .action-btn.checkin { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .action-btn.checkin:hover { background: var(--primary-dark); }
+
+        /* LOADING OVERLAY */
+        #loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-content { background: #fff; width: 90%; max-width: 600px; border-radius: 16px; padding: 25px; max-height: 80vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: modalUp 0.3s; }
+        @keyframes modalUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: -100%; top: 0; bottom: 0; box-shadow: 10px 0 20px rgba(0,0,0,0.1); }
+            .sidebar.active { left: 0; }
+            .mobile-menu-btn { display: block; }
+            .top-bar { padding: 15px 20px; }
+            .dashboard-container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING GLOBAL -->
+    <div id="loading-overlay"><div class="spinner"></div></div>
+
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div style="font-family: 'Playfair Display'; color: var(--primary-dark); font-size: 2rem; margin-bottom: 5px;">Clinica Mentare</div>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Gestão Administrativa Segura</p>
+            <input type="password" id="password" class="login-input" placeholder="Senha de acesso">
+            <button onclick="login()" class="btn-primary"><i class="ph ph-lock-key"></i> ACESSAR PAINEL</button>
+            <p id="error-msg" style="color: #ef4444; font-size: 0.85rem; margin-top: 15px; display: none;">Senha incorreta.</p>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area"><i class="ph ph-plant" style="color:var(--primary);"></i> Mentare</div>
+        <ul class="menu-list">
+            <li class="menu-item active" onclick="switchView('dashboard')"><i class="ph ph-squares-four"></i> Dashboard</li>
+            <li class="menu-item" onclick="switchView('reception')"><i class="ph ph-identification-badge"></i> Credenciamento</li>
+            <li class="menu-item" onclick="switchView('appointments')"><i class="ph ph-calendar-check"></i> Consultas</li>
+            <li class="menu-item" onclick="switchView('patients')"><i class="ph ph-users"></i> Pacientes</li>
+            <li class="menu-item" onclick="switchView('finance')"><i class="ph ph-chart-line-up"></i> Financeiro</li>
+            <li class="menu-item" onclick="switchView('settings')"><i class="ph ph-gear"></i> Configurações</li>
+        </ul>
+        <div class="user-profile">
+            <div class="avatar">AD</div>
+            <div style="flex: 1;">
+                <div style="font-size: 0.9rem; font-weight: 600;">Admin</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Gerente</div>
+            </div>
+            <i class="ph ph-sign-out" style="cursor: pointer; color: #ef4444;" onclick="logout()"></i>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="top-bar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="ph ph-list"></i></div>
+                <div class="page-title">
+                    <h2 id="page-header-title">Visão Geral</h2>
+                    <p id="current-date">Carregando data...</p>
+                </div>
+            </div>
+            <button onclick="fetchData()" class="action-btn" style="background: var(--primary); color: #fff; border: none;">
+                <i class="ph ph-arrows-clockwise"></i> <span style="display:none; @media(min-width:600px){display:inline;}">Atualizar</span>
+            </button>
+        </div>
+
+        <div class="dashboard-container">
+            
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="fade-in">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header"><div class="kpi-icon"><i class="ph ph-calendar-plus"></i></div></div>
+                        <div class="kpi-value" id="kpi-total">0</div>
+                        <div class="kpi-label">Consultas Totais</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header"><div class="kpi-icon" style="color: var(--blue); background: #eff6ff;"><i class="ph ph-currency-dollar"></i></div></div>
+                        <div class="kpi-value" id="kpi-revenue">R$ 0</div>
+                        <div class="kpi-label">Faturamento Est.</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header"><div class="kpi-icon" style="color: var(--warning); background: #fffbeb;"><i class="ph ph-clock-countdown"></i></div></div>
+                        <div class="kpi-value" id="kpi-next-time" style="font-size: 1.5rem;">--:--</div>
+                        <div class="kpi-label">Próximo Horário</div>
+                        <div class="kpi-trend" id="kpi-next-date">Sem agenda futura</div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card-section">
+                        <div class="card-header">
+                            <div class="card-title">Últimos Agendamentos</div>
+                            <button class="action-btn" onclick="switchView('appointments')">Ver Todos</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Paciente</th><th>Serviço</th><th>Data</th><th>Status</th></tr></thead>
+                                <tbody id="table-dashboard"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="card-section">
+                        <div class="card-header"><div class="card-title">Métricas Rápidas</div></div>
+                        <div style="padding: 20px;">
+                            <canvas id="chartDashboard" style="height: 200px; width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: RECEPTION / CREDENCIAMENTO -->
+            <div id="view-reception" class="hidden fade-in">
+                <div class="card-section">
+                    <div class="card-header">
+                        <div class="card-title">Recepção & Credenciamento</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">Agenda de Hoje</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Horário</th><th>Paciente</th><th>Procedimento</th><th>Status Atual</th><th>Ação</th></tr></thead>
+                            <tbody id="table-reception"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: APPOINTMENTS -->
+            <div id="view-appointments" class="hidden fade-in">
+                <div class="card-section">
+                    <div class="card-header"><div class="card-title">Agenda Completa</div></div>
+                    <div class="search-box">
+                        <input type="text" id="search-appointments" class="search-input" placeholder="Buscar por paciente ou serviço..." onkeyup="filterTable('appointments')">
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Paciente</th><th>Serviço</th><th>Data & Hora</th><th>Status (Alterar)</th><th>Contato</th></tr></thead>
+                            <tbody id="table-appointments"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: PATIENTS -->
+            <div id="view-patients" class="hidden fade-in">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header"><div class="kpi-icon"><i class="ph ph-users"></i></div></div>
+                        <div class="kpi-value" id="total-unique-patients">0</div>
+                        <div class="kpi-label">Pacientes Únicos</div>
+                    </div>
+                </div>
+                <div class="card-section">
+                    <div class="card-header">
+                        <div class="card-title">Base de Pacientes</div>
+                        <small style="color:var(--text-muted)">Agrupado por Telefone</small>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="search-patients" class="search-input" placeholder="Buscar paciente..." onkeyup="filterTable('patients')">
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Paciente</th><th>Perfil</th><th>Última Visita</th><th>Ações</th></tr></thead>
+                            <tbody id="table-patients"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: FINANCE -->
+            <div id="view-finance" class="hidden fade-in">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Faturamento Total</div>
+                        <div class="kpi-value" id="fin-total" style="color: var(--success);">R$ 0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Ticket Médio</div>
+                        <div class="kpi-value" id="fin-ticket">R$ 0</div>
+                    </div>
+                </div>
+                <div class="content-grid">
+                    <div class="card-section">
+                        <div class="card-header"><div class="card-title">Receita por Serviço</div></div>
+                        <div style="padding: 20px; height: 300px;">
+                            <canvas id="chartServices"></canvas>
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="card-header"><div class="card-title">Resumo Mensal</div></div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Mês</th><th>Receita</th></tr></thead>
+                                <tbody id="table-finance-months"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: SETTINGS -->
+            <div id="view-settings" class="hidden fade-in">
+                <div class="card-section" style="max-width: 600px; margin: 0 auto;">
+                    <div class="card-header"><div class="card-title">Configurações de Acesso</div></div>
+                    <div style="padding: 30px;">
+                        <p style="margin-bottom: 20px; color: var(--text-muted);">Definir nova senha de administrador</p>
+                        
+                        <div style="background: #fffbeb; padding: 15px; border-radius: 8px; border: 1px solid #fcd34d; margin-bottom: 20px; font-size: 0.85rem; color: #92400e;">
+                            <i class="ph ph-warning-circle" style="font-weight: bold;"></i> 
+                            <strong>Atenção:</strong> Esta alteração é salva apenas <u>neste navegador</u>. 
+                            Se acessar de outro computador, a senha será a padrão.
+                        </div>
+
+                        <input type="password" id="new-pass" class="login-input" placeholder="Nova Senha">
+                        <input type="password" id="confirm-pass" class="login-input" placeholder="Confirmar Senha">
+                        <button class="btn-primary" onclick="changePassword()">Salvar Alterações</button>
+                        <p id="msg-settings" style="margin-top:15px; font-weight:600; font-size:0.9rem;"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PATIENT MODAL -->
+    <div class="modal-overlay" id="patientModal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="font-family:'Playfair Display'; font-size:1.5rem;" id="modal-title">Histórico</h3>
+                <i class="ph ph-x" style="font-size:1.5rem; cursor:pointer;" onclick="closeModal()"></i>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG
+        const API_URL = "https://script.google.com/macros/s/AKfycbz3DbtXRCfNFjgqZueKq1YUGEcXqeKJi03jOMNLZQmliLWa5jKHh15u3BWnfw5R3QCQSA/exec";
+        const NEXUS_TOKEN = "NEXUS_BKR_ROYAL_2025_SECURE";
+        let globalData = [];
+        let charts = {};
+
+        // INIT
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        // LOGIN LOGIC (LOCAL STORAGE)
+        function login() {
+            const pass = document.getElementById('password').value;
+            const storedPass = localStorage.getItem('nexus_admin_pass') || "admin123";
+            
+            if(pass === storedPass) {
+                document.getElementById('login-screen').style.display='none';
+                fetchData();
+            } else {
+                document.getElementById('error-msg').style.display = "block";
+            }
+        }
+
+        function logout() {
+            document.getElementById('login-screen').style.display='flex';
+            document.getElementById('password').value = '';
+        }
+
+        function changePassword() {
+            const p1 = document.getElementById('new-pass').value;
+            const p2 = document.getElementById('confirm-pass').value;
+            const msg = document.getElementById('msg-settings');
+
+            if(p1 && p1 === p2) {
+                localStorage.setItem('nexus_admin_pass', p1);
+                msg.style.color = "var(--success)";
+                msg.innerText = "Senha alterada com sucesso!";
+                document.getElementById('new-pass').value = '';
+                document.getElementById('confirm-pass').value = '';
+            } else {
+                msg.style.color = "#ef4444";
+                msg.innerText = "As senhas não coincidem ou estão vazias.";
+            }
+        }
+
+        // VIEW LOGIC
+        function switchView(viewName) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active'); 
+            
+            ['dashboard', 'reception', 'appointments', 'patients', 'finance', 'settings'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if(el) el.classList.add('hidden');
+            });
+            
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            
+            if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('active');
+
+            if(viewName === 'patients') renderPatients();
+            if(viewName === 'reception') renderReception();
+            if(viewName === 'finance') renderFinance();
+            
+            const titles = { 
+                'dashboard': 'Visão Geral', 
+                'reception': 'Recepção', 
+                'appointments': 'Gestão de Consultas', 
+                'patients': 'Base de Pacientes', 
+                'finance': 'Painel Financeiro', 
+                'settings': 'Configurações' 
+            };
+            document.getElementById('page-header-title').innerText = titles[viewName];
+        }
+
+        // FETCH DATA
+        async function fetchData() {
+            try {
+                const res = await fetch(`${API_URL}?token=${NEXUS_TOKEN}&t=${new Date().getTime()}`);
+                const json = await res.json();
+                
+                // Mapeamento correto com o status vindo da planilha (coluna 6, indice 5) se existir
+                globalData = (json.agendamentos || []).reverse().map((r, idx) => {
+                    const nameRaw = r[0] || "Sem Nome";
+                    const dateRaw = r[1] || ""; 
+                    const timeRaw = r[2] || ""; 
+                    const serviceRaw = r[3] || "Consulta";
+                    const telRaw = r[4] || "";
+                    
+                    // Supõe que o status está na coluna F (indice 5)
+                    const sheetStatus = r[5] || ""; 
+
+                    let price = 150;
+                    if(serviceRaw.includes('Neuro')) price = 300;
+                    if(serviceRaw.includes('Casal')) price = 200;
+                    
+                    const uniqueId = `${String(telRaw).replace(/\D/g,'')}-${dateRaw}-${timeRaw}`.replace(/\s/g,'');
+                    
+                    // Prioriza o status da planilha se existir, senão calcula
+                    let finalStatus = { label: 'Agendado', class: 'future' };
+                    if(sheetStatus) {
+                        if(sheetStatus === 'Na Sala') finalStatus = { label: 'Na Sala', class: 'checked' };
+                        else if(sheetStatus === 'Concluído') finalStatus = { label: 'Concluído', class: 'past' };
+                        else if(sheetStatus === 'Cancelado') finalStatus = { label: 'Cancelado', class: 'cancel' };
+                        else if(sheetStatus === 'Confirmado') finalStatus = { label: 'Confirmado', class: 'checked' };
+                    } else {
+                        finalStatus = getStatus(dateRaw, timeRaw);
+                    }
+
+                    return {
+                        id: uniqueId,
+                        // Guardamos o indice original para atualização (row = index + 2 pois tem header e é 1-based)
+                        rowIndex: json.agendamentos.length - idx + 1, 
+                        hora: timeRaw,
+                        nome: String(nameRaw).replace(/'/g,''),
+                        data: String(dateRaw).replace(/'/g,''),
+                        servico: serviceRaw,
+                        tel: String(telRaw).replace(/\D/g,''),
+                        price: price,
+                        status: finalStatus,
+                        rawDate: parseDateSafe(dateRaw)
+                    };
+                });
+
+                renderDashboard();
+                renderAppointments(); 
+                
+            } catch(e) { console.error(e); alert("Erro ao carregar dados."); }
+        }
+
+        // POST DATA TO SHEET
+        async function updateSheetStatus(item, newStatusLabel) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            
+            // Procura a linha usando dados compostos para garantir unicidade
+            const payload = {
+                token: NEXUS_TOKEN,
+                action: "updateStatus",
+                data: item.data,
+                hora: item.hora,
+                telefone: item.tel,
+                novoStatus: newStatusLabel
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Google Apps Script requer no-cors para POST simples
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                
+                // Como é no-cors, não sabemos se deu erro real, assumimos sucesso e atualizamos local
+                // Aguarda um pouco para dar tempo do Google processar
+                setTimeout(() => {
+                    document.getElementById('loading-overlay').style.display = 'none';
+                    // Atualiza a tela
+                    renderAppointments();
+                    renderReception();
+                }, 1500);
+
+            } catch (error) {
+                console.error("Erro ao atualizar", error);
+                document.getElementById('loading-overlay').style.display = 'none';
+                alert("Erro de conexão ao salvar status.");
+            }
+        }
+
+        // HELPERS
+        function getStatus(dateStr, timeStr) {
+            if(!dateStr) return { label: 'Pendente', class: 'future' };
+            try {
+                const parts = dateStr.split('/');
+                if(parts.length < 2) return { label: 'Agendado', class: 'future' };
+                const day = parseInt(parts[0]);
+                const month = parseInt(parts[1]) - 1; 
+                const year = new Date().getFullYear();
+                const d = new Date(year, month, day);
+                const now = new Date();
+                
+                if (d < now && d.getDate() != now.getDate()) return { label: 'Concluído', class: 'past' };
+                if (d.getDate() == now.getDate() && d.getMonth() == now.getMonth()) return { label: 'Hoje', class: 'today' };
+                return { label: 'Agendado', class: 'future' };
+            } catch(e) { return { label: 'Agendado', class: 'future' }; }
+        }
+
+        function parseDateSafe(dateStr) {
+            if(!dateStr) return new Date();
+            const parts = dateStr.split('/');
+            if(parts.length >= 2) return new Date(new Date().getFullYear(), parseInt(parts[1]) - 1, parseInt(parts[0]));
+            return new Date();
+        }
+
+        // CHANGE STATUS & SYNC
+        function cycleStatus(id) {
+            const item = globalData.find(i => i.id === id);
+            if(!item) return;
+
+            const states = [
+                { label: 'Agendado', class: 'future' },
+                { label: 'Confirmado', class: 'checked' },
+                { label: 'Na Sala', class: 'today' },
+                { label: 'Concluído', class: 'past' },
+                { label: 'Cancelado', class: 'cancel' }
+            ];
+
+            let currIdx = states.findIndex(s => s.label === item.status.label);
+            let nextIdx = (currIdx + 1) % states.length;
+            
+            // Atualiza localmente
+            item.status = states[nextIdx];
+            
+            // Envia para Planilha
+            updateSheetStatus(item, item.status.label);
+        }
+
+        // CHECK-IN & SYNC
+        function doCheckIn(id) {
+            const item = globalData.find(i => i.id === id);
+            if(item) {
+                item.status = { label: 'Na Sala', class: 'checked' };
+                updateSheetStatus(item, 'Na Sala');
+            }
+        }
+
+        // MODAL LOGIC
+        function openPatientHistory(phone) {
+            const history = globalData.filter(i => i.tel === phone);
+            const patientName = history[0]?.nome || "Paciente";
+            
+            document.getElementById('modal-title').innerText = `Histórico: ${patientName}`;
+            const body = document.getElementById('modal-body');
+            body.innerHTML = '';
+
+            history.forEach(h => {
+                body.innerHTML += `
+                    <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:600;">${h.servico}</div>
+                            <div style="font-size:0.85rem; color:var(--text-muted);">${h.data} às ${h.hora}</div>
+                        </div>
+                        <span class="status-badge ${h.status.class}">${h.status.label}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('patientModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('patientModal').style.display = 'none';
+        }
+
+        // --- RENDERS ---
+
+        function renderDashboard() {
+            const tbody = document.getElementById('table-dashboard');
+            tbody.innerHTML = '';
+            let totalRev = 0;
+            
+            // --- CORREÇÃO DA LÓGICA DO PRÓXIMO HORÁRIO ---
+            
+            // 1. Filtra apenas agendamentos futuros ou de hoje
+            const upcoming = globalData.filter(i => i.status.class === 'future' || i.status.class === 'today');
+            
+            // 2. Ordena de forma CRESCENTE (Data mais próxima primeiro)
+            upcoming.sort((a, b) => {
+                // Compara datas
+                const diff = a.rawDate - b.rawDate;
+                if(diff !== 0) return diff;
+                // Se mesma data, compara horário string "HH:mm"
+                return a.hora.localeCompare(b.hora);
+            });
+
+            // 3. Pega o primeiro da lista ordenada (o mais próximo)
+            const nextSession = upcoming.length > 0 ? upcoming[0] : null;
+
+            // --- FIM DA CORREÇÃO ---
+
+            globalData.forEach((item, idx) => {
+                totalRev += item.price;
+                
+                if(idx < 5) {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><div class="client-cell"><div class="client-avatar">${item.nome.charAt(0)}</div><div>${item.nome}<br><small style="color:var(--text-muted)">${item.tel}</small></div></div></td>
+                            <td>${item.servico}</td>
+                            <td>${item.data}</td>
+                            <td><span class="status-badge ${item.status.class}">${item.status.label}</span></td>
+                        </tr>`;
+                }
+            });
+
+            document.getElementById('kpi-total').innerText = globalData.length;
+            document.getElementById('kpi-revenue').innerText = `R$ ${totalRev.toLocaleString('pt-BR')}`;
+            
+            if(nextSession) {
+                document.getElementById('kpi-next-time').innerText = nextSession.hora;
+                document.getElementById('kpi-next-date').innerText = `${nextSession.data} - ${nextSession.nome.split(' ')[0]}`;
+            } else {
+                document.getElementById('kpi-next-time').innerText = "--:--";
+                document.getElementById('kpi-next-date').innerText = "Sem agenda futura";
+            }
+
+            renderChart('chartDashboard', 'doughnut', {
+                labels: ['Individual', 'Casal', 'Neuro'],
+                datasets: [{
+                    data: [
+                        globalData.filter(i => !i.servico.includes('Casal') && !i.servico.includes('Neuro')).length,
+                        globalData.filter(i => i.servico.includes('Casal')).length,
+                        globalData.filter(i => i.servico.includes('Neuro')).length
+                    ],
+                    backgroundColor: ['#5e8b7e', '#eaddcf', '#3a5c52']
+                }]
+            });
+        }
+
+        function renderAppointments() {
+            const tbody = document.getElementById('table-appointments');
+            tbody.innerHTML = '';
+            globalData.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><div class="client-cell"><div class="client-avatar">${item.nome.charAt(0)}</div><div>${item.nome}<br><small style="color:var(--text-muted)">${item.tel}</small></div></div></td>
+                        <td>${item.servico}</td>
+                        <td>${item.data} <small>${item.hora}</small></td>
+                        <td><span class="status-badge ${item.status.class}" onclick="cycleStatus('${item.id}')" title="Clique para mudar">${item.status.label}</span></td>
+                        <td><a href="https://wa.me/55${item.tel}" target="_blank" class="action-btn"><i class="ph ph-whatsapp-logo"></i> Chamar</a></td>
+                    </tr>`;
+            });
+        }
+
+        function renderReception() {
+            const tbody = document.getElementById('table-reception');
+            tbody.innerHTML = '';
+            
+            const todayStr = new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'}); 
+            
+            const receptionList = globalData.filter(item => {
+                const isToday = item.data.includes(todayStr.split('/')[0] + '/' + todayStr.split('/')[1]);
+                return isToday || item.status.label === 'Na Sala';
+            });
+
+            if(receptionList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px;">Nenhum paciente agendado para hoje.</td></tr>';
+                return;
+            }
+
+            receptionList.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:bold; font-size:1.1rem;">${item.hora}</td>
+                        <td><div class="client-cell"><div class="client-avatar">${item.nome.charAt(0)}</div>${item.nome}</div></td>
+                        <td>${item.servico}</td>
+                        <td><span class="status-badge ${item.status.class}">${item.status.label}</span></td>
+                        <td>
+                            ${item.status.label !== 'Na Sala' && item.status.label !== 'Concluído' ? 
+                            `<button class="action-btn checkin" onclick="doCheckIn('${item.id}')"><i class="ph ph-check-circle"></i> Check-in</button>` : 
+                            '<span style="color:var(--success); font-weight:600;"><i class="ph ph-check"></i> OK</span>'}
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function renderPatients() {
+            const tbody = document.getElementById('table-patients');
+            tbody.innerHTML = '';
+            
+            const patients = {};
+            globalData.forEach(item => {
+                const key = item.tel && item.tel.length > 8 ? item.tel : item.nome;
+                
+                if(!patients[key]) {
+                    patients[key] = { 
+                        name: item.nome, 
+                        count: 0, 
+                        last: item.rawDate, 
+                        tel: item.tel,
+                        id: item.id
+                    };
+                }
+                
+                patients[key].count++;
+                if(item.rawDate > patients[key].last) {
+                    patients[key].last = item.rawDate;
+                    patients[key].name = item.nome; 
+                }
+            });
+
+            document.getElementById('total-unique-patients').innerText = Object.keys(patients).length;
+
+            Object.values(patients).forEach(data => {
+                const dateStr = data.last.toLocaleDateString('pt-BR') !== 'Invalid Date' ? data.last.toLocaleDateString('pt-BR') : '-';
+                
+                let tag = '<span class="patient-tag new">Novo</span>';
+                if(data.count > 5) tag = '<span class="patient-tag vip">VIP</span>';
+                else if(data.count > 1) tag = '<span class="patient-tag">Recorrente</span>';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="client-cell">
+                                <div class="client-avatar">${data.name.charAt(0)}</div>
+                                <div>${data.name} <br><small style="color:var(--text-muted)">${data.tel}</small></div>
+                            </div>
+                        </td>
+                        <td>${tag}</td>
+                        <td>${dateStr}</td>
+                        <td>
+                            <button onclick="openPatientHistory('${data.tel}')" class="action-btn">
+                                <i class="ph ph-clock-counter-clockwise"></i> Histórico
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function renderFinance() {
+            const totalRev = globalData.reduce((acc, curr) => acc + curr.price, 0);
+            document.getElementById('fin-total').innerText = `R$ ${totalRev.toLocaleString('pt-BR')}`;
+            document.getElementById('fin-ticket').innerText = `R$ ${(totalRev / (globalData.length || 1)).toFixed(2)}`;
+
+            const services = {};
+            globalData.forEach(i => { services[i.servico] = (services[i.servico] || 0) + i.price; });
+
+            renderChart('chartServices', 'bar', {
+                labels: Object.keys(services),
+                datasets: [{
+                    label: 'Receita (R$)',
+                    data: Object.values(services),
+                    backgroundColor: '#5e8b7e',
+                    borderRadius: 5
+                }]
+            });
+
+            const months = {};
+            globalData.forEach(i => {
+                const m = i.rawDate.toLocaleString('default', { month: 'long' });
+                months[m] = (months[m] || 0) + i.price;
+            });
+            
+            const tbody = document.getElementById('table-finance-months');
+            tbody.innerHTML = '';
+            Object.entries(months).forEach(([m, val]) => {
+                tbody.innerHTML += `<tr><td style="text-transform:capitalize;">${m}</td><td>R$ ${val.toLocaleString('pt-BR')}</td></tr>`;
+            });
+        }
+
+        function renderChart(id, type, data) {
+            if(charts[id]) charts[id].destroy();
+            const ctx = document.getElementById(id).getContext('2d');
+            charts[id] = new Chart(ctx, {
+                type: type,
+                data: data,
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function filterTable(view) {
+            const input = document.getElementById(`search-${view}`).value.toLowerCase();
+            const rows = document.getElementById(`table-${view}`).getElementsByTagName('tr');
+            for(let i=0; i<rows.length; i++) {
+                const text = rows[i].textContent.toLowerCase();
+                rows[i].style.display = text.includes(input) ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>

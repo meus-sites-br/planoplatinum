@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE ROYAL CUT | Barbearia Premium</title>
+    
+    <!-- FONTS: Oswald (Moderno/Masculino) & Raleway (Elegante) -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&family=Oswald:wght@300;500;700&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+    
+    <!-- LIBS -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CORE SYSTEM - ROYAL GOLD EDITION
+           ========================================= */
+        :root {
+            /* Paleta Dark & Gold */
+            --bg-body: #050505;
+            --bg-card: #0f0f0f;
+            
+            /* Dourado Clássico de Barbearia */
+            --primary: #D4AF37; 
+            
+            --text-main: #f0f0f0;
+            --text-muted: #888;
+            
+            --font-display: 'Oswald', sans-serif; 
+            --font-ui: 'Raleway', sans-serif;
+            
+            --border-thin: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: var(--font-ui); 
+            overflow-x: hidden;
+            width: 100%;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        
+        /* Imagens */
+        img { width: 100%; display: block; object-fit: cover; transition: filter 0.6s ease, transform 0.6s ease; filter: grayscale(100%) contrast(110%); }
+        .card:hover img, .g-item:hover img, .hero-bg, .blog-card:hover img { filter: grayscale(0%) contrast(105%); }
+
+        /* HEADER */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 2000;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
+            border-bottom: var(--border-thin);
+            padding: 15px 0; transition: 0.3s;
+        }
+        .nav-container { 
+            width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 30px; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .logo { font-family: var(--font-display); font-size: 1.8rem; color: #fff; z-index: 2002; letter-spacing: 2px; text-transform: uppercase; }
+        .logo span { color: var(--primary); }
+        
+        .nav-list { display: flex; gap: 30px; align-items: center; }
+        .nav-link { position: relative; color: #aaa; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; transition: 0.3s; cursor: pointer; font-weight: 600; }
+        .nav-link:hover { color: #fff; }
+        .nav-link.btn-cta { border: 1px solid var(--primary); color: var(--primary); padding: 8px 25px; }
+        .nav-link.btn-cta:hover { background: var(--primary); color: #000; }
+        .mobile-toggle { display: none; font-size: 1.8rem; cursor: pointer; color: #fff; z-index: 2002; }
+
+        /* SECTIONS */
+        section { padding: 100px 0; border-bottom: var(--border-thin); position: relative; overflow: hidden; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .section-header { text-align: center; margin-bottom: 70px; }
+        .section-subtitle { color: var(--primary); font-family: var(--font-ui); letter-spacing: 4px; text-transform: uppercase; font-size: 0.75rem; display: block; margin-bottom: 10px; font-weight: 700; }
+        .section-title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); color: #fff; font-weight: 500; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* HERO */
+        #hero { height: 100svh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 20px; }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background-image: url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop');
+            background-position: center; background-size: cover; opacity: 0.4; animation: panZoom 30s infinite alternate; filter: grayscale(100%);
+        }
+        @keyframes panZoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+        .hero-overlay { position: absolute; inset: 0; z-index: 1; background: radial-gradient(circle, transparent 20%, #050505 90%); }
+        .hero-content { position: relative; z-index: 2; max-width: 900px; }
+        .hero-tag { color: #fff; letter-spacing: 4px; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 20px; display: inline-block; border: 1px solid var(--primary); padding: 8px 20px; }
+        .hero-title { font-family: var(--font-display); font-size: clamp(3rem, 12vw, 7rem); margin-bottom: 30px; color: #fff; line-height: 1; font-weight: 700; text-transform: uppercase; }
+        .hero-title span { color: var(--primary); }
+        .btn-outline { padding: 18px 50px; background: var(--primary); color: #000; border: none; text-transform: uppercase; cursor: pointer; transition: 0.4s; font-family: var(--font-display); letter-spacing: 2px; font-size: 0.9rem; display: inline-block; font-weight: 600; }
+        .btn-outline:hover { background: #fff; color: #000; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3); }
+
+        /* ABOUT / TEAM */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .about-text p { color: #aaa; margin-bottom: 25px; font-weight: 400; font-size: 1.1rem; }
+        .about-sig { font-family: 'Mrs Saint Delafield', cursive; font-size: 2.5rem; color: var(--primary); margin-top: 20px; }
+
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 50px; }
+        .team-card { text-align: center; }
+        .team-img { height: 400px; overflow: hidden; margin-bottom: 20px; position: relative; border: 1px solid #222; }
+        .team-img img { height: 100%; transition: 0.6s; }
+        .team-card:hover .team-img img { transform: scale(1.05); filter: grayscale(0%); }
+        .team-info h3 { font-family: var(--font-display); font-size: 1.5rem; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
+        .team-info span { color: var(--primary); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* GALLERY */
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 300px; gap: 10px; }
+        .g-item { position: relative; overflow: hidden; cursor: pointer; display: block; border: 1px solid #1a1a1a; }
+        .g-item img { width: 100%; height: 100%; object-fit: cover; }
+        .g-item:hover img { transform: scale(1.05); }
+        .g-item:nth-child(1) { grid-row: span 2; }
+        .g-item:nth-child(4) { grid-column: span 2; }
+        .g-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; transition:0.3s; display:flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; border: 1px solid var(--primary); margin: 10px; }
+        .g-item:hover .g-overlay { opacity: 1; margin: 0; }
+        .g-icon { font-size: 2rem; color: var(--primary); }
+        .g-text { font-family: var(--font-display); color: #fff; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; }
+
+        /* SERVICES */
+        .services-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.1); }
+        .svc-card { background: var(--bg-body); padding: 50px 30px; text-align: center; transition: 0.4s; cursor: pointer; }
+        .svc-card:hover { background: #111; }
+        .svc-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; }
+        .svc-title { font-family: var(--font-display); font-size: 1.5rem; color: #fff; margin-bottom: 15px; text-transform: uppercase; }
+        .svc-desc { color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+        .svc-price { display: block; color: #fff; font-weight: 700; margin-top: 15px; font-size: 1.2rem; }
+
+        /* REVIEWS */
+        .reviews-scroll { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 20px; scrollbar-width: none; }
+        .review-card { min-width: 300px; background: #111; padding: 30px; border: 1px solid #222; border-top: 3px solid var(--primary); }
+
+        /* BOOKING */
+        .booking-wrap { background: #111; padding: 50px; border: 1px solid rgba(212, 175, 55, 0.1); max-width: 900px; margin: 0 auto; position: relative; }
+        .booking-wrap::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 3px; background: var(--primary); }
+        
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 40px 0; }
+        .cal-day { background: #080808; padding: 15px 5px; border: 1px solid #222; text-align: center; cursor: pointer; transition: 0.3s; color: #666; font-size: 0.9rem; font-family: var(--font-display); }
+        .cal-day:hover, .cal-day.active { background: var(--primary); color: #000; border-color: var(--primary); font-weight: 700; }
+        
+        /* Time Grid (Botões de Horário) */
+        .time-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; margin-top: 20px; }
+        .time-btn { 
+            padding: 10px 20px; border: 1px solid #333; background: #0a0a0a; color: #ccc; 
+            cursor: pointer; font-family: var(--font-display); font-size: 0.9rem; transition: 0.3s;
+        }
+        .time-btn:hover, .time-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(212,175,55,0.1); }
+        .time-btn.booked { text-decoration: line-through; opacity: 0.3; pointer-events: none; border-color: #333 !important; color: #555 !important; }
+
+        .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 15px 0; color: #fff; margin-bottom: 30px; font-family: var(--font-ui); font-size: 1.1rem; transition: 0.3s; }
+        .form-input:focus { border-color: var(--primary); }
+        select.form-input { color: #aaa; }
+        select.form-input option { background: #111; }
+        
+        .btn-submit { width: 100%; padding: 18px; background: #fff; color: #000; border: none; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-submit:hover { background: var(--primary); color: #000; }
+
+        /* FOOTER */
+        footer { background: #050505; border-top: var(--border-thin); padding: 80px 0 30px; text-align: center; }
+        .socials { margin-bottom: 30px; display: flex; justify-content: center; gap: 20px; }
+        .socials a { font-size: 1.5rem; color: #666; transition: 0.3s; }
+        .socials a:hover { color: var(--primary); transform: translateY(-5px); }
+
+        /* WIDGETS */
+        .chat-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-size: 1.5rem; cursor: pointer; z-index: 9999; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        
+        .chat-window { position: fixed; bottom: 100px; right: 30px; width: 320px; height: 450px; background: #111; border: 1px solid var(--primary); z-index: 9999; display: none; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .chat-window.open { display: flex; animation: slideUp 0.4s ease; }
+        .chat-header { padding: 15px; background: #1a1a1a; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        
+        .chat-footer { padding: 15px; background: #1a1a1a; border-top: 1px solid #222; display: flex; gap: 10px; flex-wrap: wrap; }
+        .chat-opt { font-size: 0.75rem; padding: 8px 15px; border: 1px solid #444; color: #ccc; border-radius: 0; background: transparent; cursor: pointer; transition: 0.3s; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 1px; }
+        .chat-opt:hover { border-color: var(--primary); color: var(--primary); }
+
+        .msg { padding: 10px; font-size: 0.85rem; max-width: 85%; }
+        .msg.bot { background: #222; color: #ccc; align-self: flex-start; border-left: 2px solid var(--primary); }
+        .msg.user { background: var(--primary); color: #000; align-self: flex-end; font-weight: 600; }
+        
+        .notify-toast { position: fixed; bottom: 30px; left: 30px; background: #111; border-left: 4px solid var(--primary); padding: 15px; display: flex; align-items: center; gap: 15px; z-index: 9999; transform: translateX(-150%); transition: 0.5s; width: 280px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .notify-toast.active { transform: translateX(0); }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .mobile-toggle { display: block; }
+            .nav-list { position: fixed; top: 0; right: 0; width: 100%; height: 100vh; background: #080808; flex-direction: column; justify-content: center; transform: translateX(100%); transition: 0.4s; z-index: 2001; }
+            .nav-list.active { transform: translateX(0); }
+            .nav-link { font-size: 1.5rem; color: #fff; }
+            .about-grid, .team-grid, .services-list { grid-template-columns: 1fr; gap: 40px; }
+            .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
+            .g-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+            .chat-window { width: 90%; right: 5%; bottom: 100px; }
+            .booking-wrap { padding: 30px 20px; }
+            .hero-title { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING -->
+    <div id="loading-overlay" style="display:none;"><div class="spinner"></div></div>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">ROYAL<span>CUT</span></div>
+            <nav>
+                <ul class="nav-list" id="mobileMenu">
+                    <li><a href="#about" class="nav-link" onclick="toggleMenu()">A Barbearia</a></li>
+                    <li><a href="#services" class="nav-link" onclick="toggleMenu()">Serviços</a></li>
+                    <li><a href="#gallery" class="nav-link" onclick="toggleMenu()">Ambiente</a></li>
+                    <li><a href="#team" class="nav-link" onclick="toggleMenu()">Equipa</a></li>
+                    <li><a href="#booking" class="nav-link btn-cta" onclick="toggleMenu()">Agendar</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-toggle" onclick="toggleMenu()"><i class="ph ph-list"></i></div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content" data-aos="fade-up">
+            <span class="hero-tag">ESTILO & TRADIÇÃO</span>
+            <h1 class="hero-title">Domine o<br><span>Seu Estilo</span></h1>
+            <button class="btn-outline" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Agendar Corte</button>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container about-grid">
+            <div data-aos="fade-right">
+                <img src="https://images.unsplash.com/photo-1593702295094-aea22597af65?q=80&w=2070&auto=format&fit=crop" style="height: 500px; border: 1px solid #333;">
+            </div>
+            <div class="about-text" data-aos="fade-left">
+                <span class="section-subtitle">Sobre Nós</span>
+                <h2 class="section-title" style="margin-bottom: 30px;">Mais que um Corte</h2>
+                <p>No THE ROYAL CUT, resgatamos a arte da barbearia clássica combinada com técnicas modernas. Um espaço onde o homem moderno pode relaxar, cuidar da imagem e conectar-se.</p>
+                <p>Toalha quente, navalha afiada e cerveja gelada. Aqui, o cliente não é apenas atendido, é honrado.</p>
+                <div class="about-sig">Royal Team</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">O Que Fazemos</span>
+                <h2 class="section-title">Serviços Premium</h2>
+            </div>
+            <div class="services-list">
+                <div class="svc-card" onclick="selectService('Corte de Cabelo')" data-aos="fade-up">
+                    <div class="svc-icon"><i class="ph ph-scissors"></i></div>
+                    <h3 class="svc-title">Corte</h3>
+                    <p class="svc-desc">Degradê, Social, Clássico ou Moderno. Tesoura e máquina com acabamento perfeito.</p>
+                    <span class="svc-price">25€</span>
+                </div>
+                <div class="svc-card" onclick="selectService('Barba Completa')" data-aos="fade-up" data-aos-delay="100">
+                    <div class="svc-icon"><i class="ph ph-beard"></i></div>
+                    <h3 class="svc-title">Barba</h3>
+                    <p class="svc-desc">Modelagem, terapia com toalha quente e óleos essenciais.</p>
+                    <span class="svc-price">20€</span>
+                </div>
+                <div class="svc-card" onclick="selectService('Combo Royal')" data-aos="fade-up" data-aos-delay="200">
+                    <div class="svc-icon"><i class="ph ph-crown"></i></div>
+                    <h3 class="svc-title">Combo Royal</h3>
+                    <p class="svc-desc">Cabelo + Barba + Bebida de Cortesia. A experiência completa.</p>
+                    <span class="svc-price">40€</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Instagram</span>
+                <h2 class="section-title">O Nosso Espaço</h2>
+            </div>
+            <div class="gallery-grid">
+                <a href="#" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo g-icon"></i><span class="g-text">Ver no Instagram</span></div>
+                </a>
+                <a href="#" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1622296089863-eb7fc530daa8?w=800">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo g-icon"></i><span class="g-text">Ver no Instagram</span></div>
+                </a>
+                <a href="#" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="img/3.png">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo g-icon"></i><span class="g-text">Ver no Instagram</span></div>
+                </a>
+                <a href="#" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo g-icon"></i><span class="g-text">Ver no Instagram</span></div>
+                </a>
+                <a href="#" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo g-icon"></i><span class="g-text">Ver no Instagram</span></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Profissionais</span>
+                <h2 class="section-title">Mestres Barbeiros</h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card" data-aos="fade-up">
+                    <div class="team-img"><img src="img/4.png"></div>
+                    <div class="team-info"><h3>Carlos 'Navalha'</h3><span>Master Barber</span></div>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-img"><img src="img/andre.jpg"></div>
+                    <div class="team-info"><h3>André Silva</h3><span>Especialista em Corte</span></div>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="team-img"><img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=500"></div>
+                    <div class="team-info"><h3>João Pedro</h3><span>Barba & Pigmentação</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Clientes</span>
+                <h2 class="section-title">Feedback</h2>
+            </div>
+            <div class="reviews-scroll">
+                <div class="review-card">
+                    <p style="color:var(--primary); margin-bottom:10px;">★★★★★</p>
+                    <p style="color:#aaa; font-style:italic; margin-bottom:20px;">"Melhor barbearia da cidade. O corte ficou perfeito e o ambiente é de primeira classe."</p>
+                    <strong style="color:#fff; text-transform: uppercase; font-size:0.8rem;">— Ricardo M.</strong>
+                </div>
+                <div class="review-card">
+                    <p style="color:var(--primary); margin-bottom:10px;">★★★★★</p>
+                    <p style="color:#aaa; font-style:italic; margin-bottom:20px;">"A terapia com toalha quente é incrível. Saí de lá renovado. Recomendo o Combo Royal."</p>
+                    <strong style="color:#fff; text-transform: uppercase; font-size:0.8rem;">— Bruno S.</strong>
+                </div>
+                <div class="review-card">
+                    <p style="color:var(--primary); margin-bottom:10px;">★★★★★</p>
+                    <p style="color:#aaa; font-style:italic; margin-bottom:20px;">"Profissionais muito qualificados. O Carlos entendeu exatamente o estilo que eu queria."</p>
+                    <strong style="color:#fff; text-transform: uppercase; font-size:0.8rem;">— Tiago L.</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking">
+        <div class="container">
+            <div class="booking-wrap" data-aos="zoom-in">
+                <div class="section-header" style="margin-bottom: 40px;">
+                    <span class="section-subtitle">Agenda Online</span>
+                    <h2 class="section-title">Agendar Horário</h2>
+                </div>
+
+                <p style="color:#666; text-align:center; margin-bottom:10px;">1. Selecione a Data:</p>
+                <div class="cal-grid" id="calendarGrid"></div>
+
+                <div id="bookingDetails" style="display:none; animation:fadeIn 0.5s;">
+                    <p style="color:#666; text-align:center; margin-bottom:10px;">2. Selecione o Horário:</p>
+                    <div class="time-grid" id="timeGrid"></div>
+
+                    <div id="formGrid" style="display:none;">
+                        <input type="text" id="clientName" class="form-input" placeholder="Seu Nome">
+                        <input type="tel" id="clientPhone" class="form-input" placeholder="WhatsApp / Telemóvel">
+                        <select id="clientService" class="form-input" style="color:#aaa; background:#111;">
+                            <option value="Corte de Cabelo">Corte de Cabelo</option>
+                            <option value="Barba Completa">Barba Completa</option>
+                            <option value="Combo Royal">Combo Royal</option>
+                            <option value="Pigmentação">Pigmentação</option>
+                        </select>
+                        <button class="btn-submit" onclick="sendToSystem()">Confirmar Agendamento</button>
+                    </div>
+                </div>
+                <p id="systemMsg" style="text-align:center; margin-top:20px; color:var(--primary); display:none;"></p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="logo" style="margin-bottom:20px;">ROYAL<span>CUT</span></div>
+            <div class="socials">
+                <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                <a href="#"><i class="ph ph-facebook-logo"></i></a>
+                <a href="#"><i class="ph ph-whatsapp-logo"></i></a>
+            </div>
+            <p style="color:#444; font-size:0.8rem; margin-top:20px;">&copy; 2025 The Royal Cut Barbershop.</p>
+        </div>
+    </footer>
+
+    <!-- WIDGETS -->
+    <div class="notify-toast" id="notifyToast">
+        <i class="ph ph-check-circle" style="color:var(--primary); font-size:1.5rem;"></i>
+        <div>
+            <p style="color:#fff; font-size:0.9rem; font-weight:600;">Novo Agendamento</p>
+            <span style="color:#888; font-size:0.8rem;">Corte Clássico - há 5 min</span>
+        </div>
+    </div>
+
+    <div class="chat-btn" onclick="toggleChat()">
+        <i class="ph ph-chat-centered-text"></i>
+    </div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <strong style="color:#fff; letter-spacing:1px; text-transform:uppercase;">Atendimento</strong>
+            <i class="ph ph-x" style="color:#fff; cursor:pointer;" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg bot">Bem-vindo à Royal Cut! Precisa de ajuda com o seu visual?</div>
+        </div>
+        <div class="chat-footer">
+            <button class="chat-opt" onclick="sendChat('Qual o preço do corte?')">Preços</button>
+            <button class="chat-opt" onclick="sendChat('Onde fica?')">Localização</button>
+            <button class="chat-opt" onclick="sendChat('Quero agendar')">Agendar</button>
+        </div>
+    </div>
+
+    <style>@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }</style>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // INTEGRAÇÃO GOOGLE SHEETS
+        const API_URL = "https://script.google.com/macros/s/AKfycbwn_HH6DEGS7eBlSyt2m7qw2lBUvm5tEP-qKiwvt12DHkG6vCSZ_MvdY3s6YUXYev4irQ/exec";
+        const NEXUS_TOKEN = "NEXUS_BKR_ROYAL_2025_SECURE";
+        
+        let bookedSlots = [];
+        let selectedDate = null;
+        let selectedTime = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData(); 
+            initCalendar();
+            
+            setTimeout(() => {
+                document.getElementById('notifyToast').classList.add('active');
+                setTimeout(() => document.getElementById('notifyToast').classList.remove('active'), 4000);
+            }, 5000);
+        });
+
+        async function fetchData() {
+            try {
+                // Sincronização em tempo real (Lógica inalterada)
+                const response = await fetch(`${API_URL}?token=${NEXUS_TOKEN}`);
+                const data = await response.json();
+                if(data.agendamentos) {
+                    // FILTRO DE CANCELAMENTO ADICIONADO AQUI
+                    bookedSlots = data.agendamentos
+                        .filter(row => row[5] !== "Cancelado") 
+                        .map(row => `${row[1]}-${row[2]}`);
+                        
+                    if(selectedDate) generateTimeSlots(selectedDate);
+                }
+            } catch (err) { console.log("Erro de Sync:", err); }
+        }
+
+        function initCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            const days = ['D','S','T','Q','Q','S','S'];
+            
+            for(let i=0; i<14; i++) {
+                const d = new Date(); d.setDate(d.getDate() + i);
+                if(d.getDay() === 0) continue; // Domingo Fechado
+                const dateString = `${d.getDate()}/${d.getMonth()+1}`; 
+                
+                const el = document.createElement('div');
+                el.className = 'cal-day';
+                el.innerHTML = `<span style="font-size:0.7rem; opacity:0.5; display:block;">${days[d.getDay()]}</span>${d.getDate()}`;
+                
+                el.onclick = () => {
+                    document.querySelectorAll('.cal-day').forEach(x => x.classList.remove('active'));
+                    el.classList.add('active');
+                    selectedDate = dateString;
+                    generateTimeSlots(dateString);
+                };
+                grid.appendChild(el);
+            }
+        }
+
+        function generateTimeSlots(dateKey) {
+            const timeGrid = document.getElementById('timeGrid');
+            const bookingDetails = document.getElementById('bookingDetails');
+            const formGrid = document.getElementById('formGrid');
+            
+            bookingDetails.style.display = 'block';
+            formGrid.style.display = 'none'; // Esconde formulário até escolher hora
+            timeGrid.innerHTML = ''; // Limpa botões anteriores
+
+            const hours = ['10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+
+            hours.forEach(time => {
+                const btn = document.createElement('button');
+                btn.className = 'time-btn';
+                btn.innerText = time;
+                
+                // Verifica se "DATA-HORA" já existe
+                if(bookedSlots.includes(`${dateKey}-${time}`)) {
+                    btn.classList.add('booked');
+                    btn.title = "Indisponível";
+                }
+
+                btn.onclick = () => {
+                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedTime = time;
+                    formGrid.style.display = 'block';
+                };
+                
+                timeGrid.appendChild(btn);
+            });
+        }
+
+        function sendToSystem() {
+            const n = document.getElementById('clientName').value;
+            const p = document.getElementById('clientPhone').value;
+            const s = document.getElementById('clientService').value;
+            
+            if(!n || !p || !selectedDate || !selectedTime) return alert('Por favor, preencha todos os dados.');
+            
+            const btn = document.querySelector('.btn-submit');
+            const originalText = btn.innerText;
+            btn.innerText = "Agendando...";
+            btn.disabled = true;
+            
+            const payload = { token: NEXUS_TOKEN, nome: n, telefone: p, servico: s, data: selectedDate, hora: selectedTime };
+
+            fetch(API_URL, {
+                method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                document.getElementById('systemMsg').innerText = "Agendamento Confirmado! Esperamos por si.";
+                document.getElementById('systemMsg').style.display = 'block';
+                setTimeout(() => location.reload(), 4000);
+            }).catch((e) => {
+                alert("Erro ao conectar. Tente novamente.");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        // Mobile Menu
+        function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+
+        // Chat
+        function toggleChat() { document.getElementById('chatWindow').classList.toggle('open'); }
+        function sendChat(txt) {
+            const b = document.getElementById('chatBody');
+            b.innerHTML += `<div class="msg user">${txt}</div>`;
+            
+            let reply = "Um momento...";
+            if(txt.includes('preço')) reply = "O corte é 25€ e a barba 20€. O combo fica por 40€.";
+            if(txt.includes('fica')) reply = "Estamos no centro, perto da Praça Principal.";
+            if(txt.includes('agendar')) reply = "Pode agendar aqui no site ou pelo WhatsApp!";
+
+            setTimeout(() => {
+                b.innerHTML += `<div class="msg bot">${reply}</div>`;
+                b.scrollTop = b.scrollHeight;
+            }, 800);
+        }
+
+        window.selectService = function(val) {
+            document.getElementById('clientService').value = val;
+            document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+        }
+    </script>
+</body>
+</html>

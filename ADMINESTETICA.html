@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMIÈRE | Gestão Administrativa</title>
+    
+    <!-- FONTS: Cormorant (Luxo) & Lato (Clean) -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* =========================================
+           THEME: AESTHETIC LUXURY (ROSE & NUDE)
+           ========================================= */
+        :root { 
+            --primary: #c5a085;       /* Rose Gold */
+            --primary-dark: #a3826b;
+            --primary-light: #eaddcf;
+            
+            --bg-body: #f9f7f5;       /* Off-white quente */
+            --surface: #ffffff;
+            
+            --text-main: #4a4a4a;     /* Cinza Escuro */
+            --text-muted: #888888;
+            
+            --success: #6b9080;       /* Verde Eucalipto */
+            --warning: #e09f3e;
+            --danger: #bc4749;
+            
+            --border: #ececec;
+            --shadow: 0 10px 40px rgba(197, 160, 133, 0.15);
+            --sidebar-width: 270px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; outline:none; }
+        
+        body { 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Lato', sans-serif; 
+            height: 100vh; 
+            overflow: hidden;
+            display: flex;
+        }
+
+        h1, h2, h3, .card-title, .kpi-value, .logo-area { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.5px; }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen { 
+            position: fixed; inset: 0; 
+            background: var(--bg-body);
+            z-index: 9999; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .login-card {
+            background: var(--surface); width: 100%; max-width: 420px; padding: 50px;
+            border-radius: 0px; /* Bordas retas = elegância */
+            box-shadow: var(--shadow); text-align: center; border: 1px solid var(--primary-light);
+        }
+        .login-input { 
+            width: 100%; padding: 15px; background: #fff; border: 1px solid #ddd; 
+            margin-bottom: 15px; font-size: 1rem; transition: 0.3s; color: var(--text-main);
+            font-family: 'Lato', sans-serif;
+        }
+        .login-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(197, 160, 133, 0.1); }
+        
+        .btn-primary { 
+            background: var(--primary); color: #fff; border: none; padding: 15px; width: 100%;
+            font-weight: 700; cursor: pointer; transition: 0.3s; letter-spacing: 1px;
+            display: flex; justify-content: center; align-items: center; gap: 8px; text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width); background: var(--surface); height: 100%;
+            border-right: 1px solid var(--border); display: flex; flex-direction: column;
+            transition: 0.3s; z-index: 100; position: relative;
+        }
+        .logo-area {
+            padding: 40px 30px; display: flex; align-items: center; gap: 10px;
+            font-size: 1.8rem; color: var(--text-main); font-weight: 600;
+        }
+        .logo-area span { color: var(--primary); font-style: italic; }
+        
+        .menu-list { flex: 1; padding: 0 20px; list-style: none; overflow-y: auto; }
+        .menu-item {
+            display: flex; align-items: center; gap: 15px; padding: 15px 20px;
+            color: var(--text-muted); cursor: pointer; transition: 0.3s;
+            margin-bottom: 5px; font-weight: 400; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .menu-item:hover, .menu-item.active { background: #fdfaf8; color: var(--primary); border-right: 3px solid var(--primary); }
+        .menu-item i { font-size: 1.3rem; }
+        
+        .user-profile {
+            padding: 30px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 15px;
+        }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary-dark); font-weight: bold; font-family: 'Cormorant Garamond'; font-size: 1.2rem; }
+        
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        .top-bar {
+            background: var(--surface); padding: 20px 40px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 90;
+        }
+        .page-title h2 { font-size: 2rem; font-weight: 600; color: var(--text-main); }
+        .page-title p { font-size: 0.9rem; color: var(--primary); font-family: 'Lato', sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .mobile-menu-btn { display: none; font-size: 1.8rem; cursor: pointer; color: var(--primary); }
+
+        .dashboard-container { padding: 40px; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+        /* KPI CARDS */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .kpi-card {
+            background: var(--surface); padding: 30px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02);
+            position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
+        }
+        .kpi-card:hover { transform: translateY(-5px); }
+        .kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .kpi-icon { padding: 12px; background: #fdfaf8; border-radius: 50%; color: var(--primary); font-size: 1.8rem; border: 1px solid var(--primary-light); }
+        .kpi-value { font-size: 2.5rem; font-weight: 600; color: var(--text-main); margin-bottom: 5px; }
+        .kpi-label { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .kpi-trend { font-size: 0.8rem; color: var(--success); display: flex; align-items: center; gap: 4px; margin-top: 10px; font-weight: 600; }
+
+        /* CONTENT GRID */
+        .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        
+        /* TABLE SECTION */
+        .card-section { background: var(--surface); box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 30px; border: 1px solid rgba(0,0,0,0.02); }
+        .card-header { padding: 25px 30px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .card-title { font-weight: 600; font-size: 1.4rem; color: var(--text-main); }
+        
+        .search-box { padding: 20px 30px; border-bottom: 1px solid var(--border); background: #fdfaf8; }
+        .search-input { width: 100%; padding: 12px; border: 1px solid var(--primary-light); background: #fff; color: var(--text-main); font-family: 'Lato'; }
+
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th { text-align: left; padding: 20px 30px; color: var(--primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; background: #fff; font-weight: 700; border-bottom: 2px solid var(--primary-light); }
+        td { padding: 20px 30px; border-bottom: 1px solid var(--border); color: var(--text-main); font-size: 0.95rem; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #fafafa; }
+        
+        .client-cell { display: flex; align-items: center; gap: 15px; font-weight: 600; color: var(--text-main); }
+        .client-avatar { width: 35px; height: 35px; background: #fdfaf8; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-family: 'Cormorant Garamond'; border: 1px solid var(--primary-light); }
+        
+        /* STATUS SYSTEM */
+        .status-badge { padding: 6px 15px; border-radius: 0px; font-size: 0.7rem; font-weight: 700; display: inline-block; cursor: pointer; transition: 0.2s; user-select: none; text-transform: uppercase; letter-spacing: 1px; }
+        .status-badge:hover { opacity: 0.8; }
+        
+        .status-badge.future { background: #eef2ff; color: #6366f1; } /* Agendado */
+        .status-badge.today { background: #fffbeb; color: #d97706; } /* Hoje */
+        .status-badge.past { background: #f3f4f6; color: #6b7280; } /* Concluído */
+        .status-badge.checked { background: #ecfdf5; color: #059669; } /* Em Atendimento */
+        .status-badge.cancel { background: #fef2f2; color: #ef4444; } /* Cancelado */
+        
+        .patient-tag { font-size: 0.65rem; padding: 3px 8px; background: #f3f4f6; color: #666; margin-left: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .patient-tag.vip { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+        .patient-tag.new { background: #ecfdf5; color: #047857; }
+
+        .action-btn { 
+            padding: 8px 16px; border: 1px solid var(--border);
+            background: #fff; cursor: pointer; color: var(--text-main); font-size: 0.8rem; text-decoration: none; 
+            display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+        }
+        .action-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+        
+        .action-btn.checkin { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .action-btn.checkin:hover { background: var(--primary-dark); }
+
+        /* LOADING OVERLAY */
+        #loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .spinner { width: 50px; height: 50px; border: 2px solid #eee; border-top: 2px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(74, 74, 74, 0.4); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--surface); width: 90%; max-width: 650px; padding: 40px; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.1); animation: modalUp 0.4s; }
+        @keyframes modalUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: -100%; top: 0; bottom: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
+            .sidebar.active { left: 0; }
+            .mobile-menu-btn { display: block; }
+            .top-bar { padding: 15px 20px; }
+            .dashboard-container { padding: 20px; }
+            .kpi-value { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING -->
+    <div id="loading-overlay"><div class="spinner"></div></div>
+
+    <!-- LOGIN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <i class="ph ph-sparkle" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+            <div style="font-family: 'Cormorant Garamond'; color: var(--text-main); font-size: 2.5rem; margin-bottom: 5px; font-weight: 600;">LUMIÈRE</div>
+            <p style="color: var(--text-muted); margin-bottom: 40px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;">Gestão Estética Avançada</p>
+            <input type="password" id="password" class="login-input" placeholder="PALAVRA-PASSE">
+            <button onclick="login()" class="btn-primary">ACEDER AO SISTEMA</button>
+            <p id="error-msg" style="color: var(--danger); font-size: 0.85rem; margin-top: 15px; display: none;">Credenciais inválidas.</p>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area">LUMIÈRE<span>.</span></div>
+        <ul class="menu-list">
+            <li class="menu-item active" onclick="switchView('dashboard')"><i class="ph ph-squares-four"></i> Visão Geral</li>
+            <li class="menu-item" onclick="switchView('reception')"><i class="ph ph-check-circle"></i> Recepção</li>
+            <li class="menu-item" onclick="switchView('appointments')"><i class="ph ph-calendar"></i> Agenda</li>
+            <li class="menu-item" onclick="switchView('patients')"><i class="ph ph-users"></i> Pacientes</li>
+            <li class="menu-item" onclick="switchView('finance')"><i class="ph ph-trend-up"></i> Financeiro</li>
+            <li class="menu-item" onclick="switchView('settings')"><i class="ph ph-gear"></i> Definições</li>
+        </ul>
+        <div class="user-profile">
+            <div class="avatar">LM</div>
+            <div style="flex: 1;">
+                <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-main);">Admin</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Gestor</div>
+            </div>
+            <i class="ph ph-sign-out" style="cursor: pointer; color: var(--danger); font-size: 1.2rem;" onclick="logout()"></i>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <div class="top-bar">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="ph ph-list"></i></div>
+                <div class="page-title">
+                    <h2 id="page-header-title">Dashboard</h2>
+                    <p id="current-date">...</p>
+                </div>
+            </div>
+            <button onclick="fetchData()" class="action-btn">
+                <i class="ph ph-arrows-clockwise"></i> <span style="display:none; @media(min-width:600px){display:inline;}">Atualizar</span>
+            </button>
+        </div>
+
+        <div class="dashboard-container">
+            
+            <!-- DASHBOARD -->
+            <div id="view-dashboard" class="fade-in">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header"><div class="kpi-icon"><i class="ph ph-flower-lotus"></i></div></div>
+                        <div class="kpi-value" id="kpi-total">0</div>
+                        <div class="kpi-label">Procedimentos</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header"><div class="kpi-icon" style="color: var(--success); background: #f0fdf4; border-color: #dcfce7;"><i class="ph ph-currency-eur"></i></div></div>
+                        <div class="kpi-value" id="kpi-revenue">€ 0</div>
+                        <div class="kpi-label">Faturamento Est.</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header"><div class="kpi-icon" style="color: var(--primary); background: #fff7ed; border-color: #ffedd5;"><i class="ph ph-hourglass-high"></i></div></div>
+                        <div class="kpi-value" id="kpi-next-time" style="font-size: 1.8rem;">--:--</div>
+                        <div class="kpi-label">Próximo Cliente</div>
+                        <div class="kpi-trend" id="kpi-next-date">Sem agenda</div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card-section">
+                        <div class="card-header">
+                            <div class="card-title">Agenda Recente</div>
+                            <button class="action-btn" onclick="switchView('appointments')">Ver Completa</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Paciente</th><th>Tratamento</th><th>Horário</th><th>Estado</th></tr></thead>
+                                <tbody id="table-dashboard"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="card-section">
+                        <div class="card-header"><div class="card-title">Performance</div></div>
+                        <div style="padding: 25px;">
+                            <canvas id="chartDashboard" style="height: 250px; width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECEPTION -->
+            <div id="view-reception" class="hidden fade-in">
+                <div class="card-section">
+                    <div class="card-header">
+                        <div class="card-title">Fila de Recepção</div>
+                        <div style="font-size: 0.8rem; color: var(--primary); font-weight: 700; letter-spacing: 1px;">HOJE</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Horário</th><th>Paciente</th><th>Procedimento</th><th>Estado</th><th>Ação</th></tr></thead>
+                            <tbody id="table-reception"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APPOINTMENTS -->
+            <div id="view-appointments" class="hidden fade-in">
+                <div class="card-section">
+                    <div class="card-header"><div class="card-title">Agenda Geral</div></div>
+                    <div class="search-box">
+                        <input type="text" id="search-appointments" class="search-input" placeholder="Procurar paciente..." onkeyup="filterTable('appointments')">
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Paciente</th><th>Procedimento</th><th>Data & Hora</th><th>Estado (Clique p/ alterar)</th><th>Contacto</th></tr></thead>
+                            <tbody id="table-appointments"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLIENTS -->
+            <div id="view-patients" class="hidden fade-in">
+                <div class="card-section">
+                    <div class="card-header">
+                        <div class="card-title">Base de Pacientes</div>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="search-patients" class="search-input" placeholder="Procurar por nome ou telemóvel..." onkeyup="filterTable('patients')">
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Paciente</th><th>Histórico</th><th>Última Visita</th><th>Detalhes</th></tr></thead>
+                            <tbody id="table-patients"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINANCE -->
+            <div id="view-finance" class="hidden fade-in">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Volume Total</div>
+                        <div class="kpi-value" id="fin-total" style="color: var(--success);">€ 0</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Ticket Médio</div>
+                        <div class="kpi-value" id="fin-ticket" style="color: var(--primary);">€ 0</div>
+                    </div>
+                </div>
+                <div class="content-grid">
+                    <div class="card-section">
+                        <div class="card-header"><div class="card-title">Receita por Tratamento</div></div>
+                        <div style="padding: 25px; height: 350px;">
+                            <canvas id="chartServices"></canvas>
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="card-header"><div class="card-title">Relatório Mensal</div></div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Mês</th><th>Valor</th></tr></thead>
+                                <tbody id="table-finance-months"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div id="view-settings" class="hidden fade-in">
+                <div class="card-section" style="max-width: 600px; margin: 0 auto;">
+                    <div class="card-header"><div class="card-title">Segurança & Acesso</div></div>
+                    <div style="padding: 40px;">
+                        <p style="margin-bottom: 25px; color: var(--text-muted);">Alterar palavra-passe de administração (Local)</p>
+                        <input type="password" id="new-pass" class="login-input" placeholder="Nova Palavra-passe">
+                        <input type="password" id="confirm-pass" class="login-input" placeholder="Confirmar Palavra-passe">
+                        <button class="btn-primary" onclick="changePassword()">Guardar Alterações</button>
+                        <p id="msg-settings" style="margin-top:15px; font-weight:600; font-size:0.9rem; text-align: center;"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- CLIENT MODAL -->
+    <div class="modal-overlay" id="patientModal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; border-bottom:1px solid var(--border); padding-bottom:15px;">
+                <h3 style="font-family:'Cormorant Garamond'; color:var(--primary-dark); font-size:1.8rem;" id="modal-title">Histórico Clínico</h3>
+                <i class="ph ph-x" style="font-size:1.5rem; cursor:pointer; color:var(--text-muted);" onclick="closeModal()"></i>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG
+        const API_URL = "https://script.google.com/macros/s/AKfycbxQhoa8YAVel_CIebqoQVq_HGN9rWcDlA0CVkNAsl5srC2WO4exqE2CvYOlZr1F-LPN/exec";
+        const NEXUS_TOKEN = "NEXUS_BKR_ROYAL_2025_SECURE";
+        let globalData = [];
+        let charts = {};
+
+        // INIT
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' });
+
+        // LOGIN
+        function login() {
+            const pass = document.getElementById('password').value;
+            const storedPass = localStorage.getItem('nexus_estetica_pass') || "admin123";
+            if(pass === storedPass) {
+                document.getElementById('login-screen').style.display='none';
+                fetchData();
+            } else {
+                document.getElementById('error-msg').style.display = "block";
+            }
+        }
+        function logout() {
+            document.getElementById('login-screen').style.display='flex';
+            document.getElementById('password').value = '';
+        }
+        function changePassword() {
+            const p1 = document.getElementById('new-pass').value;
+            const p2 = document.getElementById('confirm-pass').value;
+            const msg = document.getElementById('msg-settings');
+            if(p1 && p1 === p2) {
+                localStorage.setItem('nexus_estetica_pass', p1);
+                msg.style.color = "var(--success)"; msg.innerText = "Sucesso!";
+                document.getElementById('new-pass').value = ''; document.getElementById('confirm-pass').value = '';
+            } else { msg.style.color = "var(--danger)"; msg.innerText = "Erro."; }
+        }
+
+        // VIEW LOGIC
+        function switchView(viewName) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active'); 
+            ['dashboard', 'reception', 'appointments', 'patients', 'finance', 'settings'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+            });
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('active');
+            
+            if(viewName === 'patients') renderPatients();
+            if(viewName === 'reception') renderReception();
+            if(viewName === 'finance') renderFinance();
+            
+            const titles = { 'dashboard': 'Visão Geral', 'reception': 'Recepção', 'appointments': 'Agenda', 'patients': 'Pacientes', 'finance': 'Performance', 'settings': 'Configurações' };
+            document.getElementById('page-header-title').innerText = titles[viewName];
+        }
+
+        // FETCH DATA
+        async function fetchData() {
+            try {
+                const res = await fetch(`${API_URL}?token=${NEXUS_TOKEN}&t=${new Date().getTime()}`);
+                const json = await res.json();
+                globalData = (json.agendamentos || []).reverse().map((r) => {
+                    // Preços Estética (Estimativa em Euros para PT-PT)
+                    let price = 80; // Consulta Base
+                    const s = (r[3] || "").toLowerCase();
+                    if(s.includes('harmonização')) price = 350;
+                    else if(s.includes('botox') || s.includes('toxina')) price = 250;
+                    else if(s.includes('limpeza') || s.includes('skin')) price = 60;
+                    else if(s.includes('avaliação')) price = 0;
+
+                    const dateRaw = r[1] || "";
+                    const timeRaw = r[2] || "";
+                    const sheetStatus = r[5] || "";
+                    
+                    let finalStatus = { label: 'Agendado', class: 'future' };
+                    if(sheetStatus) {
+                        if(sheetStatus === 'Em Atendimento') finalStatus = { label: 'Em Atendimento', class: 'checked' };
+                        else if(sheetStatus === 'Concluído') finalStatus = { label: 'Concluído', class: 'past' };
+                        else if(sheetStatus === 'Cancelado') finalStatus = { label: 'Cancelado', class: 'cancel' };
+                        else if(sheetStatus === 'Confirmado') finalStatus = { label: 'Confirmado', class: 'checked' };
+                    } else {
+                        finalStatus = getStatus(dateRaw, timeRaw);
+                    }
+
+                    return {
+                        id: `${String(r[4]).replace(/\D/g,'')}-${dateRaw}-${timeRaw}`.replace(/\s/g,''),
+                        hora: timeRaw,
+                        nome: String(r[0] || "Paciente").replace(/'/g,''),
+                        data: String(dateRaw).replace(/'/g,''),
+                        servico: r[3] || "Consulta",
+                        tel: String(r[4] || "").replace(/\D/g,''),
+                        price: price,
+                        status: finalStatus,
+                        rawDate: parseDateSafe(dateRaw)
+                    };
+                });
+                renderDashboard();
+                renderAppointments(); 
+            } catch(e) { console.error(e); alert("Erro ao carregar dados."); }
+        }
+
+        async function updateSheetStatus(item, newStatusLabel) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            const payload = { token: NEXUS_TOKEN, action: "updateStatus", data: item.data, hora: item.hora, telefone: item.tel, novoStatus: newStatusLabel };
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+                setTimeout(() => {
+                    document.getElementById('loading-overlay').style.display = 'none';
+                    renderAppointments(); renderReception(); renderDashboard();
+                }, 1500);
+            } catch (error) { document.getElementById('loading-overlay').style.display = 'none'; alert("Erro de conexão."); }
+        }
+
+        // HELPERS
+        function getStatus(dateStr, timeStr) {
+            if(!dateStr) return { label: 'Pendente', class: 'future' };
+            try {
+                const parts = dateStr.split('/');
+                const day = parseInt(parts[0]), month = parseInt(parts[1]) - 1, year = new Date().getFullYear();
+                const d = new Date(year, month, day);
+                const now = new Date();
+                if (d < now && d.getDate() != now.getDate()) return { label: 'Concluído', class: 'past' };
+                if (d.getDate() == now.getDate() && d.getMonth() == now.getMonth()) return { label: 'Hoje', class: 'today' };
+                return { label: 'Agendado', class: 'future' };
+            } catch(e) { return { label: 'Agendado', class: 'future' }; }
+        }
+        function parseDateSafe(dateStr) {
+            if(!dateStr) return new Date();
+            const parts = dateStr.split('/');
+            return parts.length >= 2 ? new Date(new Date().getFullYear(), parseInt(parts[1]) - 1, parseInt(parts[0])) : new Date();
+        }
+
+        function cycleStatus(id) {
+            const item = globalData.find(i => i.id === id);
+            if(!item) return;
+            const states = [ { label: 'Agendado', class: 'future' }, { label: 'Confirmado', class: 'checked' }, { label: 'Em Atendimento', class: 'today' }, { label: 'Concluído', class: 'past' }, { label: 'Cancelado', class: 'cancel' } ];
+            let idx = (states.findIndex(s => s.label === item.status.label) + 1) % states.length;
+            item.status = states[idx];
+            updateSheetStatus(item, item.status.label);
+        }
+
+        function doCheckIn(id) {
+            const item = globalData.find(i => i.id === id);
+            if(item) { item.status = { label: 'Em Atendimento', class: 'checked' }; updateSheetStatus(item, 'Em Atendimento'); }
+        }
+
+        function openPatientHistory(phone) {
+            const history = globalData.filter(i => i.tel === phone);
+            document.getElementById('modal-title').innerText = history[0]?.nome || "Paciente";
+            const body = document.getElementById('modal-body');
+            body.innerHTML = '';
+            history.forEach(h => {
+                body.innerHTML += `<div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                    <div><div style="font-weight:600; color:var(--text-main); font-family:'Cormorant Garamond'; font-size:1.1rem;">${h.servico}</div><div style="font-size:0.85rem; color:var(--text-muted);">${h.data} às ${h.hora}</div></div>
+                    <span class="status-badge ${h.status.class}">${h.status.label}</span></div>`;
+            });
+            document.getElementById('patientModal').style.display = 'flex';
+        }
+        function closeModal() { document.getElementById('patientModal').style.display = 'none'; }
+
+        // RENDERS
+        function renderDashboard() {
+            const tbody = document.getElementById('table-dashboard'); tbody.innerHTML = '';
+            let totalRev = 0, nextSession = null;
+            globalData.forEach((item, idx) => {
+                if(item.status.label !== 'Cancelado') totalRev += item.price;
+                if(!nextSession && (item.status.class === 'future' || item.status.class === 'today')) nextSession = item;
+                if(idx < 5) tbody.innerHTML += `<tr><td><div class="client-cell"><div class="client-avatar">${item.nome.charAt(0)}</div>${item.nome}</div></td><td>${item.servico}</td><td>${item.hora}</td><td><span class="status-badge ${item.status.class}">${item.status.label}</span></td></tr>`;
+            });
+            document.getElementById('kpi-total').innerText = globalData.length;
+            document.getElementById('kpi-revenue').innerText = `€ ${totalRev.toLocaleString('pt-PT')}`;
+            if(nextSession) {
+                document.getElementById('kpi-next-time').innerText = nextSession.hora;
+                document.getElementById('kpi-next-date').innerText = `${nextSession.data} - ${nextSession.nome.split(' ')[0]}`;
+            }
+
+            renderChart('chartDashboard', 'doughnut', {
+                labels: ['Harmonização', 'Botox', 'Skincare'],
+                datasets: [{
+                    data: [
+                        globalData.filter(i => i.servico.toLowerCase().includes('harmonização')).length,
+                        globalData.filter(i => i.servico.toLowerCase().includes('botox') || i.servico.toLowerCase().includes('toxina')).length,
+                        globalData.filter(i => i.servico.toLowerCase().includes('limpeza') || i.servico.toLowerCase().includes('skin')).length
+                    ],
+                    backgroundColor: ['#c5a085', '#eaddcf', '#6b9080'],
+                    borderColor: '#ffffff'
+                }]
+            });
+        }
+
+        function renderAppointments() {
+            const tbody = document.getElementById('table-appointments'); tbody.innerHTML = '';
+            globalData.forEach(item => {
+                tbody.innerHTML += `<tr><td><div class="client-cell"><div class="client-avatar">${item.nome.charAt(0)}</div><div>${item.nome}</div></div></td><td>${item.servico}</td><td>${item.data} <small style="color:var(--primary);">${item.hora}</small></td><td><span class="status-badge ${item.status.class}" onclick="cycleStatus('${item.id}')">${item.status.label}</span></td><td><a href="https://wa.me/351${item.tel}" target="_blank" class="action-btn"><i class="ph ph-whatsapp-logo" style="color:#25d366;"></i></a></td></tr>`;
+            });
+        }
+
+        function renderReception() {
+            const tbody = document.getElementById('table-reception'); tbody.innerHTML = '';
+            const todayStr = new Date().toLocaleDateString('pt-PT', {day:'2-digit', month:'2-digit'});
+            const list = globalData.filter(item => (item.data.includes(todayStr.split('/')[0]+'/'+todayStr.split('/')[1]) || item.status.label === 'Em Atendimento') && item.status.label !== 'Cancelado');
+            if(list.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted)">Agenda vazia hoje.</td></tr>'; return; }
+            list.forEach(item => {
+                tbody.innerHTML += `<tr><td style="font-weight:bold; font-size:1.1rem; color:var(--primary);">${item.hora}</td><td><div class="client-cell"><div class="client-avatar">${item.nome.charAt(0)}</div>${item.nome}</div></td><td>${item.servico}</td><td><span class="status-badge ${item.status.class}">${item.status.label}</span></td><td>${item.status.label !== 'Em Atendimento' && item.status.label !== 'Concluído' ? `<button class="action-btn checkin" onclick="doCheckIn('${item.id}')">CHECK-IN</button>` : '<i class="ph ph-check" style="color:var(--success)"></i>'}</td></tr>`;
+            });
+        }
+
+        function renderPatients() {
+            const tbody = document.getElementById('table-patients'); tbody.innerHTML = '';
+            const patients = {};
+            globalData.forEach(item => {
+                const key = item.tel && item.tel.length > 8 ? item.tel : item.nome;
+                if(!patients[key]) patients[key] = { name: item.nome, count: 0, last: item.rawDate, tel: item.tel };
+                patients[key].count++;
+                if(item.rawDate > patients[key].last) { patients[key].last = item.rawDate; patients[key].name = item.nome; }
+            });
+            Object.values(patients).forEach(data => {
+                const dateStr = data.last.toLocaleDateString('pt-PT') !== 'Invalid Date' ? data.last.toLocaleDateString('pt-PT') : '-';
+                let tag = '<span class="patient-tag new">Novo</span>';
+                if(data.count > 5) tag = '<span class="patient-tag vip">VIP</span>'; else if(data.count > 1) tag = '<span class="patient-tag">Fiel</span>';
+                tbody.innerHTML += `<tr><td><div class="client-cell"><div class="client-avatar">${data.name.charAt(0)}</div><div>${data.name} <br><small style="color:var(--text-muted)">${data.tel}</small></div></div></td><td>${tag}</td><td>${dateStr}</td><td><button onclick="openPatientHistory('${data.tel}')" class="action-btn"><i class="ph ph-list-dashes"></i></button></td></tr>`;
+            });
+        }
+
+        function renderFinance() {
+            const totalRev = globalData.reduce((acc, curr) => (curr.status.label !== 'Cancelado' ? acc + curr.price : acc), 0);
+            document.getElementById('fin-total').innerText = `€ ${totalRev.toLocaleString('pt-PT')}`;
+            document.getElementById('fin-ticket').innerText = `€ ${(totalRev / (globalData.length || 1)).toFixed(2)}`;
+            const services = {}; globalData.forEach(i => { if(i.status.label !== 'Cancelado') services[i.servico] = (services[i.servico] || 0) + i.price; });
+            renderChart('chartServices', 'bar', { labels: Object.keys(services), datasets: [{ label: 'Receita', data: Object.values(services), backgroundColor: '#c5a085', borderRadius: 2 }] });
+            const months = {}; globalData.forEach(i => { if(i.status.label !== 'Cancelado') { const m = i.rawDate.toLocaleString('default', { month: 'short' }); months[m] = (months[m] || 0) + i.price; }});
+            const tbody = document.getElementById('table-finance-months'); tbody.innerHTML = '';
+            Object.entries(months).forEach(([m, val]) => tbody.innerHTML += `<tr><td style="text-transform:uppercase;">${m}</td><td style="color:var(--primary);">€ ${val.toLocaleString('pt-PT')}</td></tr>`);
+        }
+
+        function renderChart(id, type, data) {
+            if(charts[id]) charts[id].destroy();
+            Chart.defaults.color = '#888'; Chart.defaults.borderColor = '#eee';
+            charts[id] = new Chart(document.getElementById(id).getContext('2d'), { type: type, data: data, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+        }
+
+        function filterTable(view) {
+            const input = document.getElementById(`search-${view}`).value.toLowerCase();
+            const rows = document.getElementById(`table-${view}`).getElementsByTagName('tr');
+            for(let i=0; i<rows.length; i++) rows[i].style.display = rows[i].textContent.toLowerCase().includes(input) ? '' : 'none';
+        }
+    </script>
+</body>
+</html>

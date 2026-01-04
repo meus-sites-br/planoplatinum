@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LUMIÈRE | Clínica de Estética Avançada</title>
+    
+    <!-- FONTS: Cormorant Garamond (Luxo) & Lato (Clean) -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- LIBS -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CORE SYSTEM - AESTHETIC GLOW THEME
+           ========================================= */
+        :root {
+            /* Paleta Clean Luxury */
+            --bg-body: #f9f7f5; /* Off-white quente */
+            --bg-card: #ffffff;
+            
+            --primary: #c5a085; /* Rose Gold / Nude Escuro */
+            --primary-light: #eaddcf;
+            --text-main: #4a4a4a; /* Cinza Escuro Suave */
+            --text-title: #2c2c2c;
+            
+            --gradient-glow: linear-gradient(135deg, #c5a085 0%, #e6c8b3 100%);
+            
+            --font-display: 'Cormorant Garamond', serif; 
+            --font-ui: 'Lato', sans-serif;
+            
+            --shadow-soft: 0 10px 40px rgba(197, 160, 133, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: var(--font-ui); 
+            overflow-x: hidden;
+            width: 100%;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { width: 100%; display: block; object-fit: cover; transition: 0.5s; }
+
+        /* TYPOGRAPHY */
+        .display-text { font-family: var(--font-display); line-height: 1.1; font-weight: 600; color: var(--text-title); }
+        .ui-text { font-family: var(--font-ui); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; font-weight: 400; }
+
+        /* HEADER & MOBILE MENU */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 2000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(197, 160, 133, 0.2);
+            padding: 15px 0; transition: 0.3s; box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+        }
+        
+        .nav-container { 
+            width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+
+        .logo { font-family: var(--font-display); font-size: 1.8rem; color: var(--text-title); z-index: 2002; position: relative; letter-spacing: 1px; }
+        .logo span { color: var(--primary); font-style: italic; }
+        
+        /* Desktop Menu Styles */
+        .nav-list { display: flex; gap: 30px; align-items: center; }
+        .nav-link { position: relative; color: var(--text-main); font-size: 0.9rem; transition: 0.3s; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-link:hover { color: var(--primary); }
+        .nav-link.btn-cta {
+            background: var(--gradient-glow); color: #fff; padding: 10px 25px; border-radius: 0; /* Bordas retas para elegância */
+            box-shadow: var(--shadow-soft); transition: 0.4s;
+        }
+        .nav-link.btn-cta:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(197, 160, 133, 0.4); }
+        
+        .mobile-toggle { display: none; font-size: 2rem; cursor: pointer; color: var(--primary); z-index: 2002; }
+
+        /* =========================================
+           SECTIONS
+           ========================================= */
+        section { padding: 100px 0; border-bottom: 1px solid rgba(0,0,0,0.03); position: relative; overflow: hidden; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-subtitle { color: var(--primary); font-family: var(--font-ui); letter-spacing: 4px; text-transform: uppercase; font-size: 0.75rem; display: block; margin-bottom: 15px; font-weight: 700; }
+        .section-title { font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--text-title); font-weight: 400; }
+
+        /* HERO SECTION */
+        #hero {
+            height: 100svh; min-height: 600px;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 0 20px;
+        }
+        
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            /* Imagem Clean/Spa */
+            background-image: url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=2070&auto=format&fit=crop');
+            background-position: center; background-size: cover; background-repeat: no-repeat;
+            animation: zoomSlow 30s infinite alternate;
+        }
+        @keyframes zoomSlow { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+        /* Overlay suave e claro */
+        .hero-overlay { position: absolute; inset: 0; z-index: 1; background: rgba(255,255,255,0.2); backdrop-filter: blur(2px); }
+        .hero-overlay::after { content:''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(249,247,245,0.9)); }
+
+        .hero-content { position: relative; z-index: 2; max-width: 800px; width: 100%; padding: 0 15px; }
+        
+        .hero-tag { 
+            color: var(--text-main); letter-spacing: 3px; font-size: 0.8rem; text-transform: uppercase;
+            margin-bottom: 20px; display: inline-block; padding: 8px 24px;
+            border: 1px solid var(--primary); background: rgba(255,255,255,0.8); 
+        }
+        .hero-title { 
+            font-size: clamp(3rem, 10vw, 5.5rem); margin-bottom: 25px; color: var(--text-title);
+            line-height: 1; font-weight: 400;
+        }
+        .hero-title span { color: var(--primary); font-style: italic; }
+        
+        .btn-glow {
+            padding: 18px 50px; background: var(--gradient-glow); color: #fff; 
+            border: none; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; cursor: pointer; transition: 0.4s;
+            box-shadow: var(--shadow-soft); font-family: var(--font-ui);
+            display: inline-block; font-size: 0.9rem;
+        }
+        .btn-glow:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(197, 160, 133, 0.4); background: #fff; color: var(--primary); border: 1px solid var(--primary); }
+        
+        /* GRIDS & CARDS */
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+        }
+        
+        .card {
+            background: var(--bg-card); border: none; overflow: hidden;
+            transition: 0.4s; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(197, 160, 133, 0.15); }
+        .card-img-box { height: 350px; overflow: hidden; position: relative; }
+        .card-img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        .card:hover .card-img-box img { transform: scale(1.05); }
+        
+        .card-content { padding: 35px; text-align: center; position: relative; margin-top: -40px; background: #fff; width: 85%; margin-left: auto; margin-right: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .card h3 { font-size: 1.6rem; margin-bottom: 10px; font-family: var(--font-display); color: var(--text-title); }
+        .card p { font-size: 0.9rem; color: #777; margin-bottom: 20px; }
+        .card-link { color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px; border-bottom: 1px solid var(--primary); padding-bottom: 2px; }
+        .blog-meta { color: var(--primary); font-size: 0.75rem; text-transform: uppercase; display: block; margin-bottom: 8px; font-weight: 600; letter-spacing: 1px; }
+
+        /* GALERIA */
+        .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .g-item { position: relative; overflow: hidden; cursor: pointer; height: 300px; display: block; }
+        .g-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .g-item:hover img { transform: scale(1.05); }
+        .g-item:nth-child(1) { grid-column: span 2; grid-row: span 2; height: 615px; }
+        .g-overlay { 
+            position: absolute; inset: 0; background: rgba(197, 160, 133, 0.4); 
+            opacity: 0; transition:0.3s; display:flex; justify-content:center; align-items:center; 
+        }
+        .g-item:hover .g-overlay { opacity: 1; }
+        .g-overlay i { font-size: 2.5rem; color: #fff; }
+
+        /* TEAM */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
+        .team-card { text-align: center; }
+        .team-img { width: 100%; height: 400px; margin-bottom: 20px; overflow: hidden; position: relative; }
+        .team-img img { width: 100%; height: 100%; filter: grayscale(20%); }
+        .team-card:hover .team-img img { filter: grayscale(0%); transform: scale(1.03); }
+        .team-name { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-title); margin-bottom: 5px; }
+        .team-role { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* REVIEWS */
+        .reviews-slider { 
+            display: flex; gap: 30px; overflow-x: auto; padding-bottom: 30px; 
+            scrollbar-width: none; -webkit-overflow-scrolling: touch; 
+        }
+        .review-card { 
+            min-width: 320px; max-width: 400px; background: #fff; padding: 40px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); flex-shrink: 0; border-top: 4px solid var(--primary);
+        }
+        .stars { color: var(--primary); margin-bottom: 15px; font-size: 1.1rem; }
+        .review-text { color: #666; font-style: italic; line-height: 1.6; font-size: 1rem; margin-bottom: 20px; }
+        .client-name { font-weight: 700; color: var(--text-title); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* BOOKING */
+        .booking-wrap { 
+            background: #fff; padding: 50px; 
+            box-shadow: 0 20px 50px rgba(197, 160, 133, 0.1);
+            position: relative; overflow: hidden;
+        }
+        .booking-wrap::before {
+            content:''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--gradient-glow);
+        }
+        
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin: 30px 0; }
+        .cal-day {
+            background: #fdfdfd; padding: 15px 5px; border: 1px solid #eee; text-align: center;
+            cursor: pointer; transition: 0.3s; color: #555; font-weight: 400; font-size: 0.9rem;
+        }
+        .cal-day:hover, .cal-day.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        
+        .form-input {
+            width: 100%; background: #fcfcfc; border: 1px solid #e0e0e0; padding: 18px; 
+            color: #333; margin-bottom: 15px; font-family: var(--font-ui); font-size: 1rem;
+            transition: 0.3s;
+        }
+        .form-input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(197, 160, 133, 0.1); }
+
+        /* CHATBOT */
+        .chat-btn { 
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px;
+            background: var(--gradient-glow); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 2rem; cursor: pointer; box-shadow: var(--shadow-soft);
+            z-index: 9999; animation: pulse 2.5s infinite;
+        }
+        .chat-window {
+            position: fixed; bottom: 110px; right: 30px; width: 340px; height: 480px;
+            background: #fff; border: none; border-radius: 12px;
+            z-index: 9999; display: none; flex-direction: column; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .chat-window.open { display: flex; animation: slideUp 0.4s ease; }
+        .chat-header { padding: 20px; background: var(--gradient-glow); color: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #fafafa; }
+        .chat-footer { padding: 15px; background: #fff; display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #eee; }
+        .msg { padding: 10px 15px; border-radius: 20px; font-size: 0.9rem; max-width: 85%; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .msg.bot { background: #fff; color: #555; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg.user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-opt { font-size: 0.75rem; padding: 8px 16px; border: 1px solid var(--primary); color: var(--primary); border-radius: 20px; background: #fff; cursor: pointer; transition: 0.2s; }
+        .chat-opt:hover { background: var(--primary); color: #fff; }
+
+        /* NOTIFICATIONS */
+        .notify-container { position: fixed; bottom: 30px; left: 30px; z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 15px; max-width: 85%; }
+        .notify-toast {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-left: 4px solid var(--primary); padding: 15px 20px; width: 300px; max-width: 100%;
+            display: flex; align-items: center; gap: 15px; border-radius: 4px;
+            transform: translateX(-150%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); opacity: 0;
+        }
+        .notify-toast p { font-size: 0.85rem; color: #333; font-weight: 700; margin-bottom: 2px; }
+        .notify-toast span { font-size: 0.75rem; color: #888; }
+        .notify-toast.active { transform: translateX(0); opacity: 1; }
+
+        /* FOOTER */
+        footer { background: #fff; border-top: 1px solid #f0f0f0; padding: 80px 0 30px; text-align: center; }
+        .social-icon { 
+            width: 50px; height: 50px; border-radius: 50%; background: #f5f5f5; display: inline-flex;
+            align-items: center; justify-content: center; color: var(--text-title); font-size: 1.5rem;
+            transition: 0.3s; margin: 0 10px;
+        }
+        .social-icon:hover { background: var(--primary); color: #fff; transform: translateY(-5px); }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(197, 160, 133, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(197, 160, 133, 0); } 100% { box-shadow: 0 0 0 0 rgba(197, 160, 133, 0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           RESPONSIVE RULES
+           ========================================= */
+        @media (max-width: 992px) {
+            .mobile-toggle { display: block; }
+            .nav-list {
+                position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
+                background: #fff; flex-direction: column; 
+                justify-content: center; align-items: center; gap: 30px;
+                transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+                z-index: 2001; padding-bottom: 50px;
+            }
+            .nav-list.active { transform: translateX(0); }
+            .nav-link { font-size: 1.5rem; color: var(--text-title); }
+            
+            .services-grid, .team-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .g-item:nth-child(1) { grid-column: span 2; }
+        }
+
+        @media (max-width: 600px) {
+            section { padding: 60px 0; }
+            .container { padding: 0 15px; }
+            
+            .gallery-grid { grid-template-columns: 1fr; }
+            .g-item:nth-child(1) { grid-column: span 1; height: 300px; }
+            
+            .booking-wrap { padding: 25px 15px; }
+            .cal-day { font-size: 0.8rem; padding: 8px 0; }
+            
+            .chat-window { width: 90%; right: 5%; bottom: 100px; height: 400px; }
+            .notify-toast { width: 100%; left: 0; bottom: 10px; margin: 0; border-radius: 0; }
+            .notify-container { width: 90%; left: 5%; bottom: 20px; }
+            
+            .hero-title { margin-bottom: 15px; }
+            .hero-tag { font-size: 0.7rem; padding: 6px 12px; margin-bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">LUMIÈRE<span>.</span></div>
+            <nav>
+                <ul class="nav-list" id="mobileMenu">
+                    <li><a href="#about" class="nav-link" onclick="toggleMenu()">A Clínica</a></li>
+                    <li><a href="#services" class="nav-link" onclick="toggleMenu()">Tratamentos</a></li>
+                    <li><a href="#gallery" class="nav-link" onclick="toggleMenu()">Espaço</a></li>
+                    <li><a href="#team" class="nav-link" onclick="toggleMenu()">Especialistas</a></li>
+                    <li><a href="#blog" class="nav-link" onclick="toggleMenu()">Blog</a></li>
+                    <li><a href="#booking" class="nav-link btn-cta" onclick="toggleMenu()">Agendar</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-toggle" onclick="toggleMenu()"><i class="ph ph-list"></i></div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content" data-aos="zoom-in" data-aos-duration="1500">
+            <span class="hero-tag">ESTÉTICA AVANÇADA</span>
+            <h1 class="hero-title display-text">A Ciência da Sua <br><span>Melhor Versão.</span></h1>
+            <button class="btn-glow" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Agendar Avaliação</button>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Filosofia</span>
+                <h2 class="section-title display-text">Beleza com Propósito</h2>
+                <p style="color: #666; max-width: 700px; margin: 25px auto; line-height: 1.8; font-size: 1.1rem;">
+                    Na Lumière, acreditamos que a estética vai além da aparência. É sobre autoestima, saúde e bem-estar. 
+                    Unimos tecnologia de ponta e protocolos exclusivos para realçar sua beleza natural num ambiente de puro relaxamento.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Menu de Tratamentos</span>
+                <h2 class="section-title display-text">Protocolos Exclusivos</h2>
+            </div>
+            <div class="services-grid">
+                <div class="card" onclick="selectService('Harmonização Facial')" data-aos="fade-up">
+                    <div class="card-img-box"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800" alt="Harmonização"></div>
+                    <div class="card-content">
+                        <h3>Harmonização</h3>
+                        <p>Equilíbrio e simetria facial com preenchedores de ácido hialurónico premium.</p>
+                        <span class="card-link">Saber Mais</span>
+                    </div>
+                </div>
+                <div class="card" onclick="selectService('Botox Preventivo')" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-img-box"><img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800" alt="Botox"></div>
+                    <div class="card-content">
+                        <h3>Toxina Botulínica</h3>
+                        <p>Suavize linhas de expressão e previna rugas com resultados naturais.</p>
+                        <span class="card-link">Saber Mais</span>
+                    </div>
+                </div>
+                <div class="card" onclick="selectService('Limpeza de Pele Profunda')" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-img-box"><img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800" alt="Skincare"></div>
+                    <div class="card-content">
+                        <h3>Lumière Skin</h3>
+                        <p>Limpeza profunda com hidratação e peeling de diamante para uma pele radiante.</p>
+                        <span class="card-link">Saber Mais</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">O Nosso Espaço</span>
+                <h2 class="section-title display-text">Ambiente & Resultados</h2>
+            </div>
+            <div class="gallery-grid">
+                <div class="g-item" data-aos="fade-up"><img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800"><div class="g-overlay"><i class="ph ph-instagram-logo"></i></div></div>
+                <div class="g-item" data-aos="fade-up"><img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=800"><div class="g-overlay"><i class="ph ph-instagram-logo"></i></div></div>
+                <div class="g-item" data-aos="fade-up"><img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800"><div class="g-overlay"><i class="ph ph-instagram-logo"></i></div></div>
+                <div class="g-item" data-aos="fade-up"><img src="https://images.unsplash.com/photo-1552693673-1bf958298935?w=800"><div class="g-overlay"><i class="ph ph-instagram-logo"></i></div></div>
+                <div class="g-item" data-aos="fade-up"><img src="https://images.unsplash.com/photo-1556760544-74068565f05c?w=800"><div class="g-overlay"><i class="ph ph-instagram-logo"></i></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Corpo Clínico</span>
+                <h2 class="section-title display-text">Especialistas</h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card" data-aos="fade-up">
+                    <div class="team-img"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=800"></div>
+                    <div class="team-name">Dra. Sofia Lima</div>
+                    <div class="team-role">Biomédica Esteta</div>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-img"><img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=500"></div>
+                    <div class="team-name">Dra. Beatriz Costa</div>
+                    <div class="team-role">Dermatologista</div>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="team-img"><img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=500"></div>
+                    <div class="team-name">Mariana Alves</div>
+                    <div class="team-role">Esteticista Facial</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOVA SEÇÃO BLOG -->
+    <section id="blog">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Novidades & Dicas</span>
+                <h2 class="section-title display-text">Lumière Journal</h2>
+            </div>
+            <div class="services-grid">
+                <div class="card" data-aos="fade-up">
+                    <div class="card-img-box">
+                        <img src="https://images.unsplash.com/photo-1552693673-1bf958298935?w=800" alt="Blog 1">
+                    </div>
+                    <div class="card-content">
+                        <span class="blog-meta">Skincare</span>
+                        <h3>Rotina de Inverno</h3>
+                        <p>Descubra os cuidados essenciais para manter a pele hidratada e luminosa nos dias mais frios.</p>
+                        <span class="card-link">Ler Artigo</span>
+                    </div>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-img-box">
+                        <img src="https://images.unsplash.com/photo-1556760544-74068565f05c?w=800" alt="Blog 2">
+                    </div>
+                    <div class="card-content">
+                        <span class="blog-meta">Tendências</span>
+                        <h3>Ácido Hialurónico</h3>
+                        <p>Mitos e verdades sobre o preenchimento mais seguro e procurado do mercado estético.</p>
+                        <span class="card-link">Ler Artigo</span>
+                    </div>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-img-box">
+                        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800" alt="Blog 3">
+                    </div>
+                    <div class="card-content">
+                        <span class="blog-meta">Bem-estar</span>
+                        <h3>Detox Corporal</h3>
+                        <p>Como a drenagem linfática pode transformar a sua saúde, reduzindo medidas e o inchaço.</p>
+                        <span class="card-link">Ler Artigo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Depoimentos</span>
+                <h2 class="section-title display-text">Experiências Reais</h2>
+            </div>
+            <div class="reviews-slider">
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Nunca me senti tão bem cuidada. A Dra. Sofia é uma artista, minha harmonização ficou super natural. Amei!"</p>
+                    <div class="client-name">— Cláudia M.</div>
+                </div>
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"O ambiente é lindo, cheira super bem e o atendimento é impecável desde a receção. A limpeza de pele é a melhor."</p>
+                    <div class="client-name">— Joana P.</div>
+                </div>
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Faço botox há anos, mas aqui foi onde durou mais e ficou mais bonito. Recomendo de olhos fechados."</p>
+                    <div class="client-name">— Ana R.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking">
+        <div class="container">
+            <div class="booking-wrap" data-aos="zoom-in">
+                <div class="section-header" style="margin-bottom: 30px;">
+                    <span class="section-subtitle">Agenda Online</span>
+                    <h2 class="section-title display-text" style="font-size: 2.5rem;">Agende o seu Momento</h2>
+                </div>
+
+                <p style="color:#888; margin-bottom: 10px; text-align: center;">1. Selecione a Data:</p>
+                <div class="cal-grid" id="calendarGrid"></div>
+
+                <div id="bookingDetails" style="display: none; animation: slideUp 0.5s;">
+                    <p style="color:#888; margin: 20px 0 10px; text-align: center;">2. Escolha o Horário:</p>
+                    <div id="timeGrid" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; justify-content: center;"></div>
+
+                    <div id="formGrid" style="display: none; max-width: 600px; margin: 0 auto;">
+                         <p style="color:#888; margin-bottom: 15px; text-align: center;">3. Seus Dados:</p>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                            <input type="text" id="clientName" class="form-input" placeholder="O seu Nome">
+                            <input type="tel" id="clientPhone" class="form-input" placeholder="WhatsApp / Telemóvel">
+                        </div>
+                        <select id="clientService" class="form-input">
+                            <option value="Harmonização Facial">Harmonização Facial</option>
+                            <option value="Botox">Toxina Botulínica (Botox)</option>
+                            <option value="Limpeza de Pele">Limpeza de Pele Profunda</option>
+                            <option value="Avaliação">Avaliação Gratuita</option>
+                        </select>
+                        <button class="btn-glow" style="width: 100%; margin-top: 10px;" id="btnConfirm" onclick="sendToSystem()">Confirmar Agendamento</button>
+                    </div>
+                </div>
+                <p id="systemMsg" style="text-align: center; margin-top: 20px; font-weight: 600; color: var(--primary); display: none;"></p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="logo" style="margin-bottom: 20px; color: var(--text-title);">LUMIÈRE<span>.</span></div>
+            <div class="footer-socials" style="margin-bottom: 30px;">
+                <a href="#" class="social-icon"><i class="ph ph-instagram-logo"></i></a>
+                <a href="#" class="social-icon"><i class="ph ph-facebook-logo"></i></a>
+                <a href="#" class="social-icon"><i class="ph ph-whatsapp-logo"></i></a>
+            </div>
+            <p style="color: #999; font-size: 0.8rem;">&copy; 2025 Lumière Aesthetics. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- WIDGETS -->
+    <div class="notify-container" id="notifyContainer"></div>
+
+    <div class="chat-btn" onclick="toggleChat()">
+        <i class="ph ph-chat-circle-dots"></i>
+    </div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <strong style="letter-spacing: 1px;">Concierge Lumière</strong>
+            <i class="ph ph-x" style="cursor:pointer;" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg bot">Olá! Bem-vinda à Lumière. Como podemos realçar a sua beleza hoje?</div>
+        </div>
+        <div class="chat-footer">
+            <button class="chat-opt" onclick="sendChat('Quero agendar')">Agendar</button>
+            <button class="chat-opt" onclick="sendChat('Tratamentos')">Tratamentos</button>
+            <button class="chat-opt" onclick="sendChat('Localização')">Onde Estamos</button>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // Menu Mobile
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        // Chatbot
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('open');
+        }
+
+        function sendChat(msg) {
+            const body = document.getElementById('chatBody');
+            body.innerHTML += `<div class="msg user">${msg}</div>`;
+            
+            let reply = "Um momento...";
+            if(msg.includes('agendar')) reply = "Pode agendar diretamente aqui no site (secção abaixo) ou pelo nosso WhatsApp!";
+            if(msg.includes('Tratamentos')) reply = "Temos Botox, Preenchimentos, Bioestimuladores e Limpezas profundas.";
+            if(msg.includes('Localização')) reply = "Estamos na Av. da Liberdade, Lisboa.";
+
+            setTimeout(() => {
+                body.innerHTML += `<div class="msg bot">${reply}</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 800);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        // Fake Notifications
+        function initNotify() {
+            const msgs = [
+                "Agendamento: Botox - há 10 min",
+                "Dra. Sofia finalizou uma Harmonização",
+                "Agenda de Sábado quase completa!",
+                "Nova avaliação 5 estrelas ⭐⭐⭐⭐⭐"
+            ];
+            const container = document.getElementById('notifyContainer');
+
+            setInterval(() => {
+                const msg = msgs[Math.floor(Math.random() * msgs.length)];
+                const div = document.createElement('div');
+                div.className = 'notify-toast';
+                div.innerHTML = `
+                    <i class="ph ph-check-circle" style="color:#c5a085; font-size:1.2rem;"></i>
+                    <div>
+                        <p>Atualização</p>
+                        <span>${msg}</span>
+                    </div>`;
+                container.appendChild(div);
+                
+                requestAnimationFrame(() => {
+                    div.classList.add('active');
+                    setTimeout(() => {
+                        div.classList.remove('active');
+                        setTimeout(() => div.remove(), 600);
+                    }, 4000);
+                });
+            }, 12000);
+        }
+
+        // Google Sheets Integration (Mantida a mesma lógica, apenas visual atualizado)
+        const API_URL = "https://script.google.com/macros/s/AKfycbxQhoa8YAVel_CIebqoQVq_HGN9rWcDlA0CVkNAsl5srC2WO4exqE2CvYOlZr1F-LPN/exec";
+        const NEXUS_TOKEN = "NEXUS_BKR_ROYAL_2025_SECURE";
+        let bookedSlots = [], selected = { date: null, time: null };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData();
+            initCalendar();
+            initNotify();
+        });
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`${API_URL}?token=${NEXUS_TOKEN}`);
+                const data = await response.json();
+                if(data.agendamentos) {
+                    // MUDANÇA AQUI: Filtro para ignorar os cancelados
+                    bookedSlots = data.agendamentos
+                        .filter(row => row[5] !== "Cancelado")
+                        .map(row => {
+                             // Normalização agressiva para garantir match com o gerador JS
+                            let d = String(row[1]).replace(/'/g, '').trim();
+                            let t = String(row[2]).replace(/'/g, '').trim();
+                            if(d.includes('/')) {
+                                const parts = d.split('/');
+                                d = `${parseInt(parts[0])}/${parseInt(parts[1])}`;
+                            }
+                            if(t.includes(':')) {
+                                const parts = t.split(':');
+                                t = `${parseInt(parts[0])}:${parts[1]}`;
+                            }
+                            return `${d}-${t}`;
+                        });
+                        
+                    if(selected.date) generateSlots(selected.date);
+                }
+            } catch (err) { console.error("Sync Error:", err); }
+        }
+
+        function initCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const days = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+            for(let i=0; i<14; i++) {
+                const d = new Date(); d.setDate(d.getDate() + i);
+                if(d.getDay() === 0) continue; // Domingo Fechado
+                
+                const dateKey = `${d.getDate()}/${d.getMonth()+1}`;
+                const el = document.createElement('div');
+                el.className = 'cal-day';
+                el.innerHTML = `<span style="font-size:0.7rem; opacity:0.6; display:block;">${days[d.getDay()]}</span>${d.getDate()}`;
+                el.onclick = () => {
+                    document.querySelectorAll('.cal-day').forEach(x => x.classList.remove('active'));
+                    el.classList.add('active');
+                    selected.date = dateKey;
+                    generateSlots(dateKey);
+                };
+                grid.appendChild(el);
+            }
+        }
+
+        function generateSlots(dateKey) {
+            document.getElementById('bookingDetails').style.display = 'block';
+            const grid = document.getElementById('timeGrid');
+            grid.innerHTML = '';
+            
+            for(let h = 9; h < 19; h++) { 
+                let time = `${h}:00`;
+                const btn = document.createElement('button');
+                btn.innerText = time;
+                btn.style.padding = '10px 20px';
+                btn.style.background = '#fff';
+                btn.style.border = '1px solid #ddd';
+                btn.style.color = '#555';
+                btn.style.borderRadius = '20px';
+                btn.style.cursor = 'pointer';
+                btn.style.transition = '0.3s';
+                
+                if(bookedSlots.includes(`${dateKey}-${time}`)) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.4';
+                    btn.style.textDecoration = 'line-through';
+                    btn.style.background = '#eee';
+                } else {
+                    btn.onclick = () => {
+                        Array.from(grid.children).forEach(c => { c.style.background='#fff'; c.style.borderColor='#ddd'; c.style.color='#555'; });
+                        btn.style.background = '#c5a085';
+                        btn.style.borderColor = '#c5a085';
+                        btn.style.color = '#fff';
+                        selected.time = time;
+                        document.getElementById('formGrid').style.display = 'block';
+                    }
+                }
+                grid.appendChild(btn);
+            }
+        }
+
+        window.sendToSystem = function() {
+            const n = document.getElementById('clientName').value;
+            const p = document.getElementById('clientPhone').value;
+            const s = document.getElementById('clientService').value;
+            
+            if(!n || !p) return alert('Por favor, preencha os seus dados.');
+            
+            const btn = document.getElementById('btnConfirm');
+            btn.innerText = "A processar...";
+            btn.disabled = true;
+
+            const payload = { token: NEXUS_TOKEN, nome: n, telefone: p, servico: s, data: selected.date, hora: selected.time };
+
+            fetch(API_URL, {
+                method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                const msg = document.getElementById('systemMsg');
+                msg.style.display = 'block';
+                msg.innerText = "Agendamento Confirmado! Entraremos em contacto brevemente.";
+                setTimeout(() => location.reload(), 4000);
+            }).catch(() => {
+                btn.disabled = false; btn.innerText = "Tentar Novamente";
+            });
+        }
+
+        window.selectService = function(name) {
+            document.getElementById('clientService').value = name;
+            document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+        }
+    </script>
+</body>
+</html>

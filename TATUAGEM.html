@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>INK & AURA | Crimson Edition</title>
+    
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Rosarivo:ital@0;1&display=swap" rel="stylesheet">
+    
+    <!-- LIBS -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           RESET & CORE SYSTEM
+           ========================================= */
+        :root {
+            --bg-body: #0a0a0a;
+            --bg-card: #141414;
+            --primary: #D90429;
+            --primary-dark: #8d0018;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --gradient-glow: linear-gradient(45deg, var(--primary) 0%, #ff4d6d 100%);
+            --font-display: 'Rosarivo', serif; 
+            --font-ui: 'Outfit', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: var(--font-ui); 
+            overflow-x: hidden;
+            width: 100%;
+            line-height: 1.5;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { width: 100%; display: block; object-fit: cover; transition: 0.5s; border-radius: 4px; }
+
+        /* TYPOGRAPHY */
+        .display-text { font-family: var(--font-display); line-height: 1.1; }
+        .ui-text { font-family: var(--font-ui); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; font-weight: 600; }
+
+        /* =========================================
+           HEADER & NAVIGATION (Mobile First Approach)
+           ========================================= */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 2000;
+            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(217, 4, 41, 0.3);
+            padding: 15px 0; transition: 0.3s;
+        }
+        
+        .nav-container { 
+            width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+
+        .logo { font-family: var(--font-display); font-size: 1.6rem; color: #fff; z-index: 2002; position: relative; }
+        .logo span { color: var(--primary); }
+        
+        /* Desktop Menu Styles */
+        .nav-list { display: flex; gap: 30px; align-items: center; }
+        .nav-link { position: relative; color: #ccc; font-size: 0.9rem; transition: 0.3s; cursor: pointer; }
+        .nav-link:hover { color: var(--primary); }
+        .nav-link.btn-cta {
+            background: var(--primary); color: #fff; padding: 8px 25px; border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(217, 4, 41, 0.4);
+        }
+        
+        .mobile-toggle { display: none; font-size: 2rem; cursor: pointer; color: #fff; z-index: 2002; }
+
+        /* =========================================
+           SECTIONS
+           ========================================= */
+        section { padding: 80px 0; border-bottom: 1px solid #1a1a1a; position: relative; overflow: hidden; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .section-header { text-align: center; margin-bottom: 50px; }
+        .section-subtitle { color: var(--primary); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-size: 0.8rem; display: block; margin-bottom: 10px; }
+        .section-title { font-size: clamp(2rem, 5vw, 3.5rem); color: #fff; }
+
+        /* HERO SECTION */
+        #hero {
+            height: 100svh; /* svh para mobile browsers */
+            min-height: 600px;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 0 20px;
+        }
+        
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background-image: url('img/piercing.jpg');
+            background-position: center; background-size: cover; background-repeat: no-repeat;
+            opacity: 0.6; animation: zoomSlow 25s infinite alternate;
+        }
+        @keyframes zoomSlow { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+        .hero-overlay { position: absolute; inset: 0; z-index: 1; background: radial-gradient(circle, transparent 0%, rgba(10,10,10,0.9) 100%); }
+
+        .hero-content { position: relative; z-index: 2; max-width: 900px; width: 100%; padding: 0 15px; }
+        .hero-tag { 
+            color: var(--primary); font-weight: 700; letter-spacing: 3px; 
+            margin-bottom: 20px; display: inline-block; padding: 6px 16px;
+            border: 1px solid rgba(217, 4, 41, 0.5); border-radius: 30px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); font-size: 0.75rem;
+        }
+        .hero-title { 
+            font-size: clamp(2.5rem, 10vw, 6rem); margin-bottom: 20px; color: #fff;
+            text-shadow: 0 10px 40px rgba(0,0,0,0.9); line-height: 1.1;
+        }
+        .hero-title span { color: var(--primary); font-style: italic; }
+        
+        .btn-glow {
+            padding: 15px 40px; background: var(--primary); color: #fff; 
+            border: none; border-radius: 50px; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; cursor: pointer; transition: 0.4s;
+            box-shadow: 0 0 25px rgba(217, 4, 41, 0.6); font-family: var(--font-ui);
+            display: inline-block; font-size: 0.9rem;
+        }
+        
+        /* GRIDS & CARDS */
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+        
+        .card {
+            background: var(--bg-card); border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; cursor: pointer;
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .card-img-box { height: 250px; overflow: hidden; position: relative; }
+        .card-img-box::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-card), transparent); }
+        .card-content { padding: 25px; position: relative; z-index: 2; margin-top: -50px; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 10px; font-family: var(--font-display); }
+        .card-link { color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* GALERIA */
+        .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .g-item { position: relative; overflow: hidden; border-radius: 8px; cursor: pointer; height: 300px; display: block; }
+        .g-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; filter: grayscale(100%); }
+        .g-item:hover img { transform: scale(1.1); filter: grayscale(0%); }
+        .g-item:nth-child(1) { grid-column: span 2; grid-row: span 2; height: 610px; }
+        .g-overlay { position: absolute; inset: 0; background: rgba(217,4,41,0.8); opacity: 0; transition:0.3s; display:flex; justify-content:center; align-items:center; }
+        .g-item:hover .g-overlay { opacity: 1; }
+        .g-overlay i { font-size: 2rem; color: #fff; }
+
+        /* TEAM */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .team-card { text-align: center; }
+        .team-img { width: 100%; height: 350px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; overflow: hidden; }
+        .team-img img { width: 100%; height: 100%; filter: grayscale(100%); }
+        .team-card:hover .team-img img { filter: grayscale(0%); }
+
+        /* REVIEWS */
+        .reviews-slider { 
+            display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; 
+            scrollbar-width: none; -webkit-overflow-scrolling: touch; 
+        }
+        .review-card { 
+            min-width: 280px; max-width: 350px; background: #111; padding: 25px; border-radius: 12px; 
+            border: 1px solid #222; border-left: 3px solid var(--primary); flex-shrink: 0;
+        }
+
+        /* BOOKING */
+        .booking-wrap { 
+            background: #111; border-radius: 16px; padding: 40px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            background-image: radial-gradient(circle at top right, rgba(217, 4, 41, 0.1), transparent 40%);
+        }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 20px 0; }
+        .cal-day {
+            background: #1a1a1a; padding: 10px 5px; border-radius: 6px; text-align: center;
+            cursor: pointer; transition: 0.3s; color: #fff; font-weight: 600; border: 1px solid #222; font-size: 0.9rem;
+        }
+        .cal-day:hover, .cal-day.active { background: var(--primary); border-color: var(--primary); }
+        .form-input {
+            width: 100%; background: #0a0a0a; border: 1px solid #333; padding: 15px; border-radius: 8px;
+            color: #fff; margin-bottom: 15px; font-family: var(--font-ui); font-size: 1rem;
+        }
+        .form-input:focus { border-color: var(--primary); }
+
+        /* CHATBOT */
+        .chat-btn { 
+            position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px;
+            background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.8rem; cursor: pointer; box-shadow: 0 0 30px rgba(217, 4, 41, 0.6);
+            z-index: 9999; animation: pulse 2s infinite;
+        }
+        .chat-window {
+            position: fixed; bottom: 90px; right: 20px; width: 320px; height: 450px;
+            background: #111; border: 1px solid #333; border-radius: 16px;
+            z-index: 9999; display: none; flex-direction: column; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+        .chat-window.open { display: flex; animation: slideUp 0.3s ease; }
+        .chat-header { padding: 15px; background: #161616; border-bottom: 1px solid #222; display: flex; justify-content: space-between; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0a0a0a; }
+        .chat-footer { padding: 10px; background: #161616; display: flex; gap: 5px; flex-wrap: wrap; }
+        .msg { padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; max-width: 85%; }
+        .msg.bot { background: #222; color: #e0e0e0; align-self: flex-start; border-left: 2px solid var(--primary); }
+        .msg.user { background: var(--primary); color: #fff; align-self: flex-end; }
+        .chat-opt { font-size: 0.7rem; padding: 5px 10px; border: 1px solid #444; color: #ccc; border-radius: 20px; background: transparent; cursor: pointer; }
+
+        /* NOTIFICATIONS */
+        .notify-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 10px; max-width: 80%; }
+        .notify-toast {
+            background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
+            border-left: 4px solid var(--primary); padding: 12px 15px; width: 100%;
+            display: flex; align-items: center; gap: 10px; border-radius: 4px;
+            transform: translateX(-150%); transition: 0.5s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); opacity: 0;
+        }
+        .notify-toast.active { transform: translateX(0); opacity: 1; }
+
+        /* FOOTER */
+        footer { background: #050505; border-top: 1px solid #222; padding: 60px 0 30px; text-align: center; }
+        .social-icon { width: 45px; height: 45px; border-radius: 50%; background: #1a1a1a; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; margin: 0 5px; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(217, 4, 41, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(217, 4, 41, 0); } 100% { box-shadow: 0 0 0 0 rgba(217, 4, 41, 0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           MEDIA QUERIES (MOBILE FIXES)
+           ========================================= */
+        @media (max-width: 992px) {
+            .mobile-toggle { display: block; }
+            .nav-list {
+                position: fixed; top: 0; right: 0; width: 100%; height: 100vh;
+                background: #0a0a0a; flex-direction: column; 
+                justify-content: center; align-items: center; gap: 30px;
+                transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+                z-index: 2001; padding-bottom: 50px;
+            }
+            .nav-list.active { transform: translateX(0); }
+            .nav-link { font-size: 1.5rem; color: #fff; }
+            
+            .services-grid, .team-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .g-item:nth-child(1) { grid-column: span 2; }
+        }
+
+        @media (max-width: 600px) {
+            /* Adjust padding and font sizes for small screens */
+            section { padding: 60px 0; }
+            .container { padding: 0 15px; }
+            
+            /* Galeria em coluna única no mobile */
+            .gallery-grid { grid-template-columns: 1fr; }
+            .g-item:nth-child(1) { grid-column: span 1; height: 300px; }
+            
+            /* Booking */
+            .booking-wrap { padding: 20px; }
+            .cal-day { font-size: 0.8rem; padding: 8px 0; }
+            
+            /* Widgets */
+            .chat-window { width: 90%; right: 5%; bottom: 90px; height: 400px; }
+            .notify-toast { max-width: 90%; font-size: 0.85rem; }
+            .chat-btn { width: 50px; height: 50px; font-size: 1.5rem; bottom: 15px; right: 15px; }
+            
+            /* Hero */
+            .hero-title { margin-bottom: 15px; }
+            .hero-tag { font-size: 0.7rem; padding: 6px 12px; margin-bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">INK<span>&</span>AURA</div>
+            <nav>
+                <ul class="nav-list" id="mobileMenu">
+                    <li><a href="#about" class="nav-link" onclick="toggleMenu()">Sobre</a></li>
+                    <li><a href="#services" class="nav-link" onclick="toggleMenu()">Serviços</a></li>
+                    <li><a href="#gallery" class="nav-link" onclick="toggleMenu()">Galeria</a></li>
+                    <li><a href="#team" class="nav-link" onclick="toggleMenu()">Artistas</a></li>
+                    <li><a href="#booking" class="nav-link btn-cta" onclick="toggleMenu()">Agendar</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-toggle" onclick="toggleMenu()"><i class="ph ph-list"></i></div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content" data-aos="zoom-in">
+            <span class="hero-tag">ATELIER DE ARTE</span>
+            <h1 class="hero-title display-text">Sua História,<br>Nossa <span>Tinta.</span></h1>
+            <button class="btn-glow" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Iniciar Projeto</button>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Conceito</span>
+                <h2 class="section-title display-text">Mais que Tatuagem</h2>
+                <p style="color: #ccc; max-width: 600px; margin: 20px auto; line-height: 1.6;">
+                    Fugimos do ordinário. O INK & AURA é um manifesto de contraste, onde a tinta preta encontra a pureza da pele em designs autorais.
+                    Operamos com o rigor da biossegurança hospitalar e a paixão da arte clássica.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Especialidades</span>
+                <h2 class="section-title display-text">Arte na Pele</h2>
+            </div>
+            <div class="services-grid">
+                <div class="card" onclick="selectService('Fine Line')" data-aos="fade-up">
+                    <div class="card-img-box"><img src="img/fineline.jpg"></div>
+                    <div class="card-content">
+                        <h3>Fine Line</h3>
+                        <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Traços delicados e precisos. Ideal para minimalismo.</p>
+                        <span class="card-link">Ver Agenda <i class="ph ph-arrow-right"></i></span>
+                    </div>
+                </div>
+                <div class="card" onclick="selectService('Realismo')" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-img-box"><img src="img/realismo.jpg"></div>
+                    <div class="card-content">
+                        <h3>Realismo</h3>
+                        <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Sombreamento suave e profundidade em preto e cinza.</p>
+                        <span class="card-link">Ver Agenda <i class="ph ph-arrow-right"></i></span>
+                    </div>
+                </div>
+                <div class="card" onclick="selectService('Piercing')" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-img-box"><img src="img/piercing.jpg"></div>
+                    <div class="card-content">
+                        <h3>Piercing</h3>
+                        <p style="color:#aaa; font-size:0.9rem; margin-bottom:15px;">Joias em Titânio Grau Implante. Biossegurança total.</p>
+                        <span class="card-link">Ver Agenda <i class="ph ph-arrow-right"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Portfólio</span>
+                <h2 class="section-title display-text">Galeria</h2>
+            </div>
+            <div class="gallery-grid">
+                <a href="https://instagram.com" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="img/piercing.jpg">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo"></i></div>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="img/realismo.jpg">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo"></i></div>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="img/fineline.jpg">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo"></i></div>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="img/tatuagem1.jpg">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo"></i></div>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="g-item" data-aos="fade-up">
+                    <img src="img/tatto.jpg">
+                    <div class="g-overlay"><i class="ph ph-instagram-logo"></i></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Artistas</span>
+                <h2 class="section-title display-text">Residentes</h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card" data-aos="fade-up">
+                    <div class="team-img"><img src="https://images.unsplash.com/photo-1542596594-649edbc13630?w=500"></div>
+                    <div class="team-name">Ravenna Black</div>
+                    <div class="team-role">Fine Line</div>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="team-img"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500"></div>
+                    <div class="team-name">Dante V.</div>
+                    <div class="team-role">Blackwork</div>
+                </div>
+                <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="team-img"><img src="img/tato.jpg"></div>
+                    <div class="team-name">Alex Piercer</div>
+                    <div class="team-role">Body Piercing</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Feedback</span>
+                <h2 class="section-title display-text">Clientes</h2>
+            </div>
+            <div class="reviews-slider">
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Experiência incrível. O estúdio é impecável e a Ravenna entendeu exatamente o que eu queria. O traço ficou perfeito."</p>
+                    <div class="client-name">— Julia M.</div>
+                </div>
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Fiz meu primeiro piercing com o Alex e não senti nada. A cicatrização foi super tranquila com a joia de titânio."</p>
+                    <div class="client-name">— Lucas S.</div>
+                </div>
+                <div class="review-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="review-text">"Melhor estúdio de SP. O ambiente é super vibe e o atendimento é vip. Recomendo o Blackwork do Dante."</p>
+                    <div class="client-name">— Marcos P.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking">
+        <div class="container">
+            <div class="booking-wrap" data-aos="zoom-in">
+                <div class="section-header" style="margin-bottom: 30px; text-align: left;">
+                    <span class="section-subtitle">Agenda Online</span>
+                    <h2 class="section-title display-text" style="font-size: 2.5rem;">Reserve seu Espaço</h2>
+                </div>
+
+                <p style="color:#ccc; margin-bottom: 10px;">1. Escolha a Data:</p>
+                <div class="cal-grid" id="calendarGrid"></div>
+
+                <div id="bookingDetails" style="display: none; animation: slideUp 0.5s;">
+                    <p style="color:#ccc; margin: 20px 0 10px;">2. Escolha o Horário:</p>
+                    <div id="timeGrid" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px;"></div>
+
+                    <div id="formGrid" style="display: none;">
+                         <p style="color:#ccc; margin-bottom: 10px;">3. Seus Dados:</p>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                            <input type="text" id="clientName" class="form-input" placeholder="Seu Nome">
+                            <input type="tel" id="clientPhone" class="form-input" placeholder="Seu WhatsApp">
+                        </div>
+                        <select id="clientService" class="form-input" style="color: #fff;">
+                            <option value="Fine Line">Tatuagem Fine Line</option>
+                            <option value="Realismo">Tatuagem Realista</option>
+                            <option value="Piercing">Body Piercing</option>
+                        </select>
+                        <button class="btn-glow" style="width: 100%; margin-top: 10px;" id="btnConfirm" onclick="sendToSystem()">Confirmar Agendamento</button>
+                    </div>
+                </div>
+                <p id="systemMsg" style="text-align: center; margin-top: 20px; font-weight: 600; color: var(--primary); display: none;"></p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="logo" style="margin-bottom: 20px;">INK<span>&</span>AURA</div>
+            <div class="footer-socials">
+                <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                <a href="#"><i class="ph ph-whatsapp-logo"></i></a>
+                <a href="#"><i class="ph ph-tiktok-logo"></i></a>
+            </div>
+            <p style="color: #666; font-size: 0.8rem;">&copy; 2025 Ink & Aura Studio. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- NOTIFICATIONS -->
+    <div class="notify-container" id="notifyContainer"></div>
+
+    <!-- CHATBOT -->
+    <div class="chat-btn" onclick="toggleChat()">
+        <i class="ph ph-chat-teardrop-text"></i>
+    </div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <strong style="color:#fff;">Assistant</strong>
+            <i class="ph ph-x" style="color:#fff; cursor:pointer;" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg bot">Bem-vindo ao Ink & Aura! Posso ajudar com agendamentos ou dúvidas?</div>
+        </div>
+        <div class="chat-footer">
+            <button class="chat-opt" onclick="sendChat('Como agendar?')">Agendar</button>
+            <button class="chat-opt" onclick="sendChat('Valores?')">Valores</button>
+            <button class="chat-opt" onclick="sendChat('Onde fica?')">Localização</button>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        // Menu Mobile
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        // Chatbot
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('open');
+        }
+
+        function sendChat(msg) {
+            const body = document.getElementById('chatBody');
+            body.innerHTML += `<div class="msg user">${msg}</div>`;
+            
+            let reply = "Estou verificando...";
+            if(msg.includes('agendar')) reply = "Você pode agendar pelo formulário no site ou clicar em 'Agendar' no menu!";
+            if(msg.includes('Valores')) reply = "Nossa saída mínima para tatuagens é R$300. Piercings a partir de R$120.";
+            if(msg.includes('fica')) reply = "Estamos na Rua Augusta, 1000, Jardins - SP.";
+
+            setTimeout(() => {
+                body.innerHTML += `<div class="msg bot">${reply}</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 800);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        // Fake Notifications
+        function initNotify() {
+            const msgs = [
+                "Nova reserva: Fine Line - há 2 min",
+                "Nova reserva: Piercing - há 10 min",
+                "Agenda de Sábado lotando!",
+                "Novo feedback 5 estrelas recebido"
+            ];
+            const container = document.getElementById('notifyContainer');
+
+            setInterval(() => {
+                const msg = msgs[Math.floor(Math.random() * msgs.length)];
+                const div = document.createElement('div');
+                div.className = 'notify-toast';
+                div.innerHTML = `<i class="ph ph-check-circle" style="color:#D90429; font-size:1.2rem;"></i><span style="color:#fff; font-size:0.9rem;">${msg}</span>`;
+                container.appendChild(div);
+                
+                requestAnimationFrame(() => {
+                    div.classList.add('active');
+                    setTimeout(() => {
+                        div.classList.remove('active');
+                        setTimeout(() => div.remove(), 600);
+                    }, 4000);
+                });
+            }, 10000);
+        }
+
+        // Google Sheets
+        const API_URL = "https://script.google.com/macros/s/AKfycbz3cgXSIPtgiPsa_yuGjjuTt8s09XiDY98G1hO8MolFtjjPASthBgoK4Wc9RqGEXPZXXQ/exec";
+        const NEXUS_TOKEN = "NEXUS_BKR_ROYAL_2025_SECURE";
+        let bookedSlots = [], selected = { date: null, time: null };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData();
+            initCalendar();
+            initNotify();
+        });
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`${API_URL}?token=${NEXUS_TOKEN}`);
+                const data = await response.json();
+                
+                if(data.agendamentos) {
+                    // CHANGE: Filter out cancelled appointments so slots become available again
+                    bookedSlots = data.agendamentos
+                        .filter(row => row[5] !== "Cancelado")
+                        .map(row => `${row[1]}-${row[2]}`);
+                        
+                    if(selected.date) generateSlots(selected.date);
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        function initCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const days = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+            for(let i=0; i<14; i++) {
+                const d = new Date(); d.setDate(d.getDate() + i);
+                if(d.getDay() === 0) continue;
+                
+                const dateKey = `${d.getDate()}/${d.getMonth()+1}`;
+                const el = document.createElement('div');
+                el.className = 'cal-day';
+                el.innerHTML = `<span style="font-size:0.7rem; opacity:0.7; display:block;">${days[d.getDay()]}</span>${d.getDate()}`;
+                el.onclick = () => {
+                    document.querySelectorAll('.cal-day').forEach(x => x.classList.remove('active'));
+                    el.classList.add('active');
+                    selected.date = dateKey;
+                    generateSlots(dateKey);
+                };
+                grid.appendChild(el);
+            }
+        }
+
+        function generateSlots(dateKey) {
+            document.getElementById('bookingDetails').style.display = 'block';
+            const grid = document.getElementById('timeGrid');
+            grid.innerHTML = '';
+            
+            for(let h = 10; h < 20; h+=2) { 
+                let time = `${h}:00`;
+                const btn = document.createElement('button');
+                btn.innerText = time;
+                btn.style.padding = '10px 20px';
+                btn.style.background = '#0a0a0a';
+                btn.style.border = '1px solid #333';
+                btn.style.color = '#fff';
+                btn.style.borderRadius = '8px';
+                btn.style.cursor = 'pointer';
+                
+                if(bookedSlots.includes(`${dateKey}-${time}`)) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.3';
+                    btn.style.textDecoration = 'line-through';
+                } else {
+                    btn.onclick = () => {
+                        Array.from(grid.children).forEach(c => { c.style.background='#0a0a0a'; c.style.borderColor='#333'; });
+                        btn.style.background = '#D90429';
+                        btn.style.borderColor = '#D90429';
+                        selected.time = time;
+                        document.getElementById('formGrid').style.display = 'block';
+                    }
+                }
+                grid.appendChild(btn);
+            }
+        }
+
+        window.sendToSystem = function() {
+            const n = document.getElementById('clientName').value;
+            const p = document.getElementById('clientPhone').value;
+            const s = document.getElementById('clientService').value;
+            
+            if(!n || !p) return alert('Por favor, preencha os seus dados.');
+            
+            const btn = document.getElementById('btnConfirm');
+            btn.innerText = "A processar...";
+            btn.disabled = true;
+
+            const payload = { token: NEXUS_TOKEN, nome: n, telefone: p, servico: s, data: selected.date, hora: selected.time };
+
+            fetch(API_URL, {
+                method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                const msg = document.getElementById('systemMsg');
+                msg.style.display = 'block';
+                msg.innerText = "Agendamento Confirmado! Entraremos em contacto brevemente.";
+                setTimeout(() => location.reload(), 4000);
+            }).catch(() => {
+                btn.disabled = false; btn.innerText = "Tentar Novamente";
+            });
+        }
+
+        window.selectService = function(name) {
+            document.getElementById('clientService').value = name;
+            document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+        }
+    </script>
+</body>
+</html>

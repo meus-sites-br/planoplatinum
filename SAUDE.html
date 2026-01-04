@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLÍNICA MENTARE | Saúde & Bem-estar</title>
+    
+    <!-- FONTS & ICONS -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CONFIGURAÇÃO GERAL - ESTÉTICA CLÍNICA
+           ========================================= */
+        :root {
+            /* Paleta Calm/Natureza */
+            --gold: #5e8b7e; /* Verde Sálvia */
+            --gold-dark: #3a5c52;
+            --bg: #f9f9f7; /* Off-white suave */
+            --surface: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border: rgba(0, 0, 0, 0.08);
+            
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Manrope', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        
+        html, body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            font-family: var(--font-body); 
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body::-webkit-scrollbar { width: 8px; }
+        body::-webkit-scrollbar-track { background: #f0f0f0; }
+        body::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        img { width: 100%; display: block; object-fit: cover; }
+        ul { list-style: none; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; }
+        section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+
+        .section-header { text-align: center; margin-bottom: 50px; }
+        .section-title { font-family: var(--font-title); font-size: clamp(2rem, 5vw, 3rem); color: var(--gold-dark); margin-bottom: 10px; }
+        .section-subtitle { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; font-size: 0.8rem; font-weight: 700; }
+
+        /* Botões */
+        .btn-gold {
+            padding: 15px 40px; background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #fff; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            border: none; cursor: pointer; border-radius: 50px; transition: 0.3s; display: inline-block;
+            box-shadow: 0 5px 15px rgba(94, 139, 126, 0.3);
+            text-align: center;
+        }
+        .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(94, 139, 126, 0.4); background: var(--gold-dark); }
+
+        /* HEADER */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-box { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-title); font-size: 1.6rem; font-weight: 700; color: var(--gold-dark); z-index: 1001; }
+        .logo span { color: var(--gold); font-weight: 400; }
+        .nav-list { display: flex; gap: 30px; }
+        .nav-list a { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-main); position: relative; font-weight: 600; }
+        .nav-list a:hover { color: var(--gold); }
+        .mobile-toggle { display: none; font-size: 1.8rem; cursor: pointer; color: var(--text-main); z-index: 1001; }
+
+        /* HERO - MELHORIA DE LEGIBILIDADE */
+        #hero {
+            min-height: 100vh; display: flex; align-items: center; position: relative;
+            background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop') center/cover no-repeat fixed;
+            padding-top: 80px;
+        }
+        #hero::before { 
+            content: ''; position: absolute; inset: 0; 
+            background: linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.65) 100%);
+            z-index: 1; 
+        }
+        .hero-content { position: relative; z-index: 2; text-align: center; max-width: 800px; margin: 0 auto; padding: 0 20px; }
+        .hero-tag { color: var(--gold-dark); border: 1px solid var(--gold); padding: 8px 20px; display: inline-block; margin-bottom: 20px; letter-spacing: 3px; font-size: 0.7rem; text-transform: uppercase; background: rgba(255,255,255,0.9); border-radius: 30px; font-weight: 700; }
+        .hero-title { 
+            font-family: var(--font-title); 
+            font-size: clamp(2.5rem, 8vw, 4.5rem); 
+            line-height: 1.1; 
+            margin-bottom: 20px; 
+            color: #1a2e29; 
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
+        }
+        .hero-desc { 
+            font-size: clamp(1rem, 3vw, 1.2rem); 
+            color: #1a2e29; 
+            margin-bottom: 40px; 
+            line-height: 1.6; 
+            font-weight: 600; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+
+        /* SERVICES */
+        .services-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .service-card {
+            height: 300px; border-radius: 12px; overflow: hidden; position: relative;
+            cursor: pointer; transition: 0.4s; border: none;
+            background-size: cover; background-position: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .service-overlay {
+            position: absolute; inset: 0; background: rgba(58, 92, 82, 0.85);
+            backdrop-filter: blur(2px); transition: 0.4s;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 30px; text-align: center;
+        }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(94, 139, 126, 0.2); }
+        .service-card:hover .service-overlay { background: rgba(58, 92, 82, 0.95); }
+        .svc-title { font-family: var(--font-title); font-size: 1.5rem; color: #fff; margin-bottom: 10px; }
+        .svc-price { font-size: 1.3rem; color: #b8e6da; font-weight: 700; margin-bottom: 15px; display: block; }
+        .svc-btn { 
+            padding: 10px 25px; border: 1px solid #fff; color: #fff; text-transform: uppercase; 
+            font-size: 0.8rem; border-radius: 30px; transition: 0.3s;
+        }
+        .service-card:hover .svc-btn { background: #fff; color: var(--gold-dark); }
+
+        /* BOOKING */
+        #booking { background: #fff; }
+        .booking-container { background: #fdfdfd; padding: 40px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .cal-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; scrollbar-width: thin; }
+        .cal-day { min-width: 80px; background: #fff; border: 1px solid #e0e0e0; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.3s; flex-shrink: 0; color: var(--text-main); }
+        .cal-day.active { background: var(--gold); color: #fff; border-color: var(--gold); box-shadow: 0 5px 15px rgba(94, 139, 126, 0.3); }
+        .time-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; margin-bottom: 40px; }
+        .time-slot { padding: 12px; background: #fff; border: 1px solid #e0e0e0; color: var(--text-main); border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .time-slot.selected { background: var(--gold); color: #fff; font-weight: 700; border-color: var(--gold); }
+        .time-slot:disabled { opacity: 0.3; background: #f0f0f0; cursor: not-allowed; border-color: #eee; }
+        
+        .booking-form { display: none; border-top: 1px solid #eee; padding-top: 30px; animation: slideUp 0.5s ease; }
+        .input-field { width: 100%; padding: 15px; background: #fff; border: 1px solid #ddd; color: var(--text-main); border-radius: 8px; outline: none; margin-bottom: 15px; font-family: var(--font-body); transition: 0.3s; }
+        .input-field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(94, 139, 126, 0.1); }
+
+        /* GALERIA & BLOG & TEAM */
+        .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .g-item { height: 300px; position: relative; overflow: hidden; display: block; border-radius: 8px; }
+        .g-item img { height: 100%; width: 100%; transition: 0.5s; filter: none; object-fit: cover; }
+        .g-item:hover img { transform: scale(1.05); }
+        .g-icon { position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); opacity:0; transition:0.3s; font-size: 2rem; color: #fff; background: rgba(94, 139, 126, 0.8); padding: 15px; border-radius: 50%; }
+        .g-item:hover .g-icon { opacity: 1; }
+        .g-item:nth-child(1) { grid-column: span 2; grid-row: span 2; height: 610px; }
+
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .team-card { position: relative; height: 420px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .team-card img { height: 100%; width: 100%; transition: 0.5s; filter: grayscale(20%); object-fit: cover; }
+        .team-card:hover img { filter: grayscale(0%); transform: scale(1.03); }
+        .team-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px; background: linear-gradient(to top, rgba(58, 92, 82, 0.95), transparent); color: #fff; }
+        
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .blog-card { background: #fff; cursor: pointer; border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .blog-card:hover { transform: translateY(-8px); border-color: var(--gold); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .blog-card h3 { color: var(--text-main); }
+        
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-img img { width: 100%; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: none; }
+        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .feat-item { display: flex; align-items: center; gap: 10px; color: var(--text-main); font-weight: 500; }
+        .feat-item i { color: var(--gold); font-size: 1.2rem; }
+
+        /* FOOTER */
+        footer { background: #f4f4f4; padding: 60px 0 20px; border-top: 1px solid #e0e0e0; color: var(--text-main); }
+        .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; text-align: left; }
+        .footer-about p { color: var(--text-muted); margin: 20px 0; line-height: 1.6; }
+        .socials { display: flex; gap: 15px; font-size: 1.5rem; }
+        .socials a { color: var(--gold-dark); }
+        .socials a:hover { color: var(--gold); }
+        .hours-list li { display: flex; justify-content: space-between; color: var(--text-muted); margin-bottom: 10px; border-bottom: 1px solid #e0e0e0; padding-bottom: 5px; }
+        .copyright { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: var(--text-muted); font-size: 0.8rem; }
+        .footer h4 { color: var(--gold-dark); }
+
+        /* WIDGETS & CHAT */
+        .chat-btn { 
+            position: fixed; bottom: 30px; right: 30px; z-index: 9999; 
+            width: 60px; height: 60px; background: var(--gold); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 1.8rem;
+            color: #fff; cursor: pointer; box-shadow: 0 10px 30px rgba(94, 139, 126, 0.4);
+            transition: 0.3s;
+        }
+        .chat-btn:hover { transform: scale(1.1); background: var(--gold-dark); }
+
+        .chat-window {
+            position: fixed; bottom: 100px; right: 30px; width: 350px; height: 500px;
+            background: #fff; border: 1px solid #e0e0e0; border-radius: 12px;
+            z-index: 9999; display: none; flex-direction: column; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        .chat-window.open { display: flex; animation: slideUp 0.3s ease; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
+        
+        .chat-footer { padding: 15px; background: #fff; display: flex; flex-wrap: wrap; gap: 10px; border-top: 1px solid #eee; }
+        .quick-btn { 
+            background: transparent; border: 1px solid var(--gold); color: var(--gold-dark); padding: 5px 12px; 
+            border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; 
+        }
+        .quick-btn:hover { background: var(--gold); color: #fff; }
+
+        .msg { padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; max-width: 80%; }
+        .msg.bot { background: #e8eceb; color: #333; align-self: flex-start; border-bottom-left-radius: 0; }
+        .msg.user { background: var(--gold); color: #fff; align-self: flex-end; font-weight: 500; border-bottom-right-radius: 0; }
+
+        .notify-stack { position: fixed; bottom: 30px; left: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .notify-card { 
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
+            border-left: 4px solid var(--gold); padding: 15px; border-radius: 4px; width: 300px;
+            display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateX(-150%); transition: 0.5s; 
+        }
+        .notify-card.active { transform: translateX(0); }
+        .notify-card p { color: var(--text-main); font-weight: 600; }
+
+        .blog-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
+        .blog-modal.active { display: flex; }
+        .blog-modal-content { background: #fff; width: 100%; max-width: 800px; border: none; position: relative; border-radius: 12px; padding: 40px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow-y: auto; max-height: 90vh; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           RESPONSIVIDADE APRIMORADA (TABLET & MENOR)
+           ========================================= */
+        @media (max-width: 900px) {
+            .nav-list { 
+                display: none; 
+                flex-direction: column; 
+                position: absolute; 
+                top: 70px; 
+                left: 0; 
+                width: 100%; 
+                background: #fff; 
+                padding: 30px; 
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                text-align: center;
+            }
+            .nav-list.active { display: flex; }
+            .mobile-toggle { display: block; }
+            .about-grid, .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+            
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-grid .g-item:nth-child(1) { height: 300px !important; grid-column: span 2 !important; }
+            
+            .chat-window { width: 90%; right: 5%; bottom: 100px; }
+            section { padding: 60px 0; }
+        }
+
+        /* =========================================
+           RESPONSIVIDADE: CELULARES (< 600px)
+           ========================================= */
+        @media (max-width: 600px) {
+            .container { padding: 0 15px; } /* Menos padding lateral */
+
+            .section-title { font-size: 1.8rem; }
+            .hero-title { font-size: 2.2rem; }
+            .hero-desc { font-size: 1rem; }
+            
+            .btn-gold { padding: 12px 30px; width: 100%; font-size: 0.9rem; }
+            
+            /* FORÇAR 1 COLUNA EM TUDO PARA NÃO QUEBRAR */
+            .services-list, .blog-grid, .team-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-grid .g-item:nth-child(1) { grid-column: span 1 !important; }
+
+            .booking-container { padding: 20px; }
+            .features { grid-template-columns: 1fr; }
+            
+            /* Ajustes Finos */
+            .notify-card { width: 92%; left: 4%; bottom: 20px; }
+            .chat-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 1.5rem; }
+            .chat-window { bottom: 80px; width: 92%; right: 4%; height: 60vh; }
+            
+            .blog-modal-content { padding: 20px; margin: 10px; width: 95%; }
+            
+            /* Ajuste específico para garantir leitura no mobile */
+            #hero::before {
+                background: linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 100%);
+            }
+        }
+
+        /* =========================================
+           RESPONSIVIDADE: TELAS PEQUENAS (375px - 400px)
+           ========================================= */
+        @media (max-width: 420px) {
+            .hero-title { font-size: 2rem; } /* Ajuste fino */
+            .section-title { font-size: 1.6rem; }
+            .section-header { margin-bottom: 30px; }
+
+            /* Calendário mais compacto horizontalmente */
+            .cal-day { min-width: 65px; padding: 10px 5px; }
+            .cal-day span { font-size: 0.65rem; }
+            .cal-day strong { font-size: 1.1rem; }
+            
+            /* Grid de Horários em 3 Colunas Fixas */
+            .time-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .time-slot { font-size: 0.85rem; padding: 10px 5px; text-align: center; }
+            
+            /* Chat e Notificações */
+            .chat-window { bottom: 75px; height: 65vh; right: 2%; width: 96%; }
+            .notify-card { padding: 12px; width: 94%; left: 3%; }
+            .notify-card i { font-size: 1.3rem; }
+            .notify-card p { font-size: 0.85rem; }
+
+            /* Inputs */
+            .input-field { padding: 12px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-box">
+            <div class="logo">CLÍNICA <span>MENTARE</span></div>
+            <nav>
+                <ul class="nav-list" id="navMenu">
+                    <li><a href="#hero" onclick="toggleMenu()">Início</a></li>
+                    <li><a href="#about" onclick="toggleMenu()">Sobre</a></li>
+                    <li><a href="#services" onclick="toggleMenu()">Terapias</a></li>
+                    <li><a href="#booking" onclick="toggleMenu()">Consultas</a></li>
+                    <li><a href="#team" onclick="toggleMenu()">Especialistas</a></li>
+                    <li><a href="#blog" onclick="toggleMenu()">Blog</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-toggle" onclick="toggleMenu()"><i class="ph ph-list"></i></div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container hero-content" data-aos="fade-up">
+            <span class="hero-tag">SAÚDE MENTAL & EQUILÍBRIO</span>
+            <h1 class="hero-title">Encontre a sua <br>Paz Interior.</h1>
+            <p class="hero-desc">Um espaço seguro e acolhedor dedicado ao seu bem-estar emocional. Profissionais especializados prontos para ouvir você.</p>
+            <button class="btn-gold" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">AGENDAR CONSULTA</button>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container about-grid">
+            <div class="about-img" data-aos="fade-right">
+                <!-- Imagem de consultório acolhedor ou terapeuta -->
+                <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=800" alt="Sobre a Clínica">
+            </div>
+            <div class="about-text" data-aos="fade-left">
+                <span class="section-subtitle">Nossa Abordagem</span>
+                <h2 class="section-title">Acolhimento & Ciência</h2>
+                <p>Muito mais do que consultas, oferecemos um caminho para o autoconhecimento. Nossa clínica foi projetada para promover tranquilidade, sigilo e conforto desde o primeiro momento.</p>
+                <div class="features">
+                    <div class="feat-item"><i class="ph ph-flower-lotus"></i> Abordagem Humanizada</div>
+                    <div class="feat-item"><i class="ph ph-coffee"></i> Ambiente Acolhedor</div>
+                    <div class="feat-item"><i class="ph ph-shield-check"></i> Sigilo Absoluto</div>
+                    <div class="feat-item"><i class="ph ph-heart-beat"></i> Terapia Baseada em Evidências</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Especialidades</span>
+                <h2 class="section-title">Nossas Terapias</h2>
+            </div>
+            <div class="services-list">
+                <!-- Mantive o 'onclick' enviando o nome do serviço para o form -->
+                <div class="service-card" onclick="selectService('Psicoterapia Individual')" style="background-image: url('https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=800');" data-aos="fade-up">
+                    <div class="service-overlay">
+                        <h3 class="svc-title">Psicoterapia Individual</h3>
+                        <p class="svc-desc" style="color:#e0e0e0; font-size:0.9rem;">Sessões focadas em autoconhecimento e resolução de conflitos.</p>
+                        <span class="svc-price">R$ 150</span>
+                        <span class="svc-btn">AGENDAR</span>
+                    </div>
+                </div>
+                <div class="service-card" onclick="selectService('Terapia de Casal')" style="background-image: url('https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=800');" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-overlay">
+                        <h3 class="svc-title">Terapia de Casal</h3>
+                        <p class="svc-desc" style="color:#e0e0e0; font-size:0.9rem;">Mediação e fortalecimento de vínculos afetivos.</p>
+                        <span class="svc-price">R$ 200</span>
+                        <span class="svc-btn">AGENDAR</span>
+                    </div>
+                </div>
+                <div class="service-card" onclick="selectService('Avaliação Neuropsicológica')" style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800'); border-color:var(--gold);" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-overlay">
+                        <h3 class="svc-title" style="color:#fff;">Neuropsicologia</h3>
+                        <p class="svc-desc" style="color:#e0e0e0; font-size:0.9rem;">Avaliação cognitiva completa e reabilitação.</p>
+                        <span class="svc-price">R$ 300</span>
+                        <span class="svc-btn" style="background:var(--gold); color:#fff; border-color:var(--gold);">AGENDAR AVALIAÇÃO</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="booking">
+        <div class="container">
+            <div class="booking-container">
+                <div class="section-header" style="text-align: left; margin-bottom: 30px;">
+                    <span class="section-subtitle">Agenda Online</span>
+                    <h2 class="section-title">Marque sua Sessão</h2>
+                </div>
+                <div style="margin-bottom:15px; color:var(--text-muted);">1. Escolha a Data:</div>
+                <div class="cal-scroll" id="cal-scroll"></div>
+                <div id="time-container" style="display:none; margin-top:30px;">
+                    <div style="margin-bottom:15px; color:var(--text-muted);">Horários Disponíveis:</div>
+                    <div class="time-grid" id="time-grid"></div>
+                </div>
+                <div class="booking-form" id="booking-form">
+                    <h3 style="color:var(--gold-dark); margin-bottom:20px;">3. Seus Dados</h3>
+                    <input type="text" id="client-name" class="input-field" placeholder="Seu Nome Completo">
+                    <input type="tel" id="client-phone" class="input-field" placeholder="Seu WhatsApp">
+                    <select id="client-service" class="input-field">
+                        <!-- Values mantidos compatíveis com o sistema, labels alterados -->
+                        <option value="Psicoterapia Individual">Psicoterapia Individual</option>
+                        <option value="Terapia de Casal">Terapia de Casal</option>
+                        <option value="Avaliação Neuropsicológica">Avaliação Neuropsicológica</option>
+                    </select>
+                    <button class="btn-gold" style="width:100%; margin-top:15px;" id="btn-confirm" onclick="sendToSystem()">CONFIRMAR AGENDAMENTO</button>
+                    <p id="msg-system" style="color:var(--gold); text-align:center; margin-top:15px; display:none; font-weight:600;"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Profissionais</span>
+                <h2 class="section-title">Nossa Equipe</h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card" data-aos="zoom-in">
+                    <img src="img/psi1.jpg">
+                    <div class="team-info"><h3>Dra. Ana Silva</h3><p style="color:#b8e6da;">Psicóloga Clínica</p></div>
+                </div>
+                <div class="team-card" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500">
+                    <div class="team-info"><h3>Dr. Carlos Mendes</h3><p style="color:#b8e6da;">Terapeuta Cognitivo</p></div>
+                </div>
+                <div class="team-card" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=500">
+                    <div class="team-info"><h3>Dra. Julia Souza</h3><p style="color:#b8e6da;">Neuropsicóloga</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Conteúdo</span>
+                <h2 class="section-title">Saúde Mental</h2>
+            </div>
+            <div class="blog-grid">
+                <div class="blog-card" onclick="openBlog('cuidados')">
+                    <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=500" style="height:200px; width:100%; object-fit:cover;">
+                    <div style="padding:20px;">
+                        <h3 class="svc-title" style="font-size:1.2rem; color:var(--text-main);">Como lidar com a Ansiedade?</h3>
+                        <span style="color:var(--gold); text-decoration:underline; font-size:0.9rem;">LER ARTIGO</span>
+                    </div>
+                </div>
+                <div class="blog-card" onclick="openBlog('tendencias')">
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500" style="height:200px; width:100%; object-fit:cover;">
+                    <div style="padding:20px;">
+                        <h3 class="svc-title" style="font-size:1.2rem; color:var(--text-main);">Mindfulness no dia a dia</h3>
+                        <span style="color:var(--gold); text-decoration:underline; font-size:0.9rem;">LER ARTIGO</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Espaço</span>
+                <h2 class="section-title">Nossa Clínica</h2>
+            </div>
+            <div class="gallery-grid">
+                <a href="#" class="g-item"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"><div class="g-icon"><i class="ph ph-instagram-logo"></i></div></a>
+                <a href="#" class="g-item"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500"><div class="g-icon"><i class="ph ph-instagram-logo"></i></div></a>
+                <a href="#" class="g-item"><img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=800"><div class="g-icon"><i class="ph ph-instagram-logo"></i></div></a>
+                <a href="#" class="g-item"><img src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?w=800"><div class="g-icon"><i class="ph ph-instagram-logo"></i></div></a>
+                <a href="#" class="g-item"><img src="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?w=500"><div class="g-icon"><i class="ph ph-instagram-logo"></i></div></a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="logo">CLÍNICA <span>MENTARE</span></div>
+                    <p>Espaço terapêutico focado no desenvolvimento humano e qualidade de vida. Profissionais éticos e ambiente seguro.</p>
+                    <div class="socials">
+                        <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                        <a href="#"><i class="ph ph-facebook-logo"></i></a>
+                        <a href="#"><i class="ph ph-whatsapp-logo"></i></a>
+                    </div>
+                </div>
+                <div class="footer-contact">
+                    <h4 style="color: var(--gold-dark); margin-bottom: 20px; font-family: var(--font-title);">Contato</h4>
+                    <p style="color: var(--text-muted); margin-bottom: 10px;"><i class="ph ph-map-pin" style="color: var(--gold); margin-right: 10px;"></i> Av. Paulista, 1234 - SP</p>
+                    <p style="color: var(--text-muted); margin-bottom: 10px;"><i class="ph ph-phone" style="color: var(--gold); margin-right: 10px;"></i> (11) 99999-9999</p>
+                    <p style="color: var(--text-muted);"><i class="ph ph-envelope" style="color: var(--gold); margin-right: 10px;"></i> contato@mentare.com</p>
+                </div>
+                <div class="footer-hours">
+                    <h4 style="color: var(--gold-dark); margin-bottom: 20px; font-family: var(--font-title);">Horário</h4>
+                    <ul class="hours-list">
+                        <li>Seg - Sex <span>08:00 - 20:00</span></li>
+                        <li>Sábado <span>09:00 - 13:00</span></li>
+                        <li>Domingo <span>Fechado</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Clínica Mentare. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- WIDGETS -->
+    <div class="notify-stack" id="notifyStack"></div>
+    <div class="chat-btn" onclick="toggleChat()"><i class="ph ph-chat-circle-dots"></i></div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div style="padding:15px; background:var(--gold); border-bottom:1px solid #ddd; display:flex; justify-content:space-between; align-items:center;">
+            <strong style="color:#fff;">Assistente Virtual</strong>
+            <i class="ph ph-x" onclick="toggleChat()" style="color:#fff; cursor:pointer;"></i>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg bot">Olá! Bem-vindo à Clínica Mentare. Como posso ajudar com sua saúde emocional hoje?</div>
+        </div>
+        <!-- Opções do Chat -->
+        <div class="chat-footer" id="chatOptions"></div>
+    </div>
+
+    <!-- BLOG MODAL -->
+    <div class="blog-modal" id="blogModal">
+        <div class="blog-modal-content">
+            <div style="position:absolute; top:10px; right:20px; font-size:2rem; cursor:pointer; color:var(--text-muted);" onclick="document.getElementById('blogModal').classList.remove('active')">&times;</div>
+            <h2 id="m-blog-title" style="color:var(--gold-dark); font-family:var(--font-title); margin-bottom:20px;"></h2>
+            <p id="m-blog-text" style="color:var(--text-main); line-height:1.8;"></p>
+        </div>
+    </div>
+
+    <script>
+        AOS.init();
+
+        // INTEGRAÇÃO MANTIDA INTACTA
+        const API_URL = "https://script.google.com/macros/s/AKfycbz3DbtXRCfNFjgqZueKq1YUGEcXqeKJi03jOMNLZQmliLWa5jKHh15u3BWnfw5R3QCQSA/exec";
+        const NEXUS_TOKEN = "NEXUS_BKR_ROYAL_2025_SECURE"; 
+        
+        let bookedSlots = []; 
+        let selected = { date: null, time: null };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData(); 
+            initCalendar(); 
+            initNotify();
+            initChat(); 
+        });
+
+        // Função extra para fechar menu ao clicar em link no mobile
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        }
+
+        async function fetchData() {
+            try {
+                // Sincronização em tempo real (Lógica inalterada)
+                const response = await fetch(`${API_URL}?token=${NEXUS_TOKEN}`);
+                const data = await response.json();
+                if(data.agendamentos) {
+                     // MUDANÇA AQUI: Filtro para ignorar os cancelados
+                    bookedSlots = data.agendamentos
+                        .filter(row => row[5] !== "Cancelado")
+                        .map(row => `${row[1]}-${row[2]}`);
+                        
+                    if(selected.date) generateSlots(selected.date);
+                }
+            } catch (err) { console.error("Sync Error:", err); }
+        }
+
+        function initCalendar() {
+            const cal = document.getElementById('cal-scroll');
+            const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+            for(let i=0; i<14; i++) {
+                const d = new Date(); d.setDate(d.getDate() + i);
+                if(d.getDay() === 0) continue;
+                const dateKey = `${d.getDate()}/${d.getMonth()+1}`;
+                const el = document.createElement('div');
+                el.className = 'cal-day';
+                el.innerHTML = `<span style="font-size:0.7rem;">${days[d.getDay()]}</span><br><strong>${d.getDate()}</strong>`;
+                el.onclick = () => {
+                    document.querySelectorAll('.cal-day').forEach(x => x.classList.remove('active'));
+                    el.classList.add('active');
+                    selected.date = dateKey;
+                    generateSlots(dateKey);
+                };
+                cal.appendChild(el);
+            }
+        }
+
+        function generateSlots(dateKey) {
+            const grid = document.getElementById('time-grid');
+            const form = document.getElementById('booking-form');
+            grid.innerHTML = ''; 
+            document.getElementById('time-container').style.display = 'block'; 
+            form.style.display = 'none';
+            // Ajustei o horário para horário comercial de clínica (8h as 18h)
+            for(let h = 8; h < 19; h++) {
+                let time = `${h.toString().padStart(2,'0')}:00`;
+                const btn = document.createElement('button');
+                btn.className = 'time-slot';
+                btn.innerText = time;
+                if(bookedSlots.includes(`${dateKey}-${time}`)) {
+                    btn.disabled = true;
+                } else {
+                    btn.onclick = () => {
+                        document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        selected.time = time;
+                        form.style.display = 'block';
+                        setTimeout(() => form.scrollIntoView({behavior:'smooth'}), 100);
+                    }
+                }
+                grid.appendChild(btn);
+            }
+        }
+
+        window.sendToSystem = function() {
+            const n = document.getElementById('client-name').value;
+            const p = document.getElementById('client-phone').value;
+            const s = document.getElementById('client-service').value;
+            if(!n || !p) return alert('Por favor, preencha os dados.');
+            
+            const btn = document.getElementById('btn-confirm');
+            btn.innerText = "AGENDANDO...";
+            btn.disabled = true;
+
+            const payload = { token: NEXUS_TOKEN, nome: n, telefone: p, servico: s, data: selected.date, hora: selected.time };
+
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                document.getElementById('msg-system').innerText = "Consulta Confirmada! Entraremos em contato.";
+                document.getElementById('msg-system').style.display = 'block';
+                setTimeout(() => location.reload(), 2500);
+            }).catch(() => {
+                alert("Erro ao conectar.");
+                btn.disabled = false;
+                btn.innerText = "CONFIRMAR";
+            });
+        }
+
+        function selectService(name) { 
+            document.getElementById('client-service').value = name;
+            document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+        }
+
+        function openBlog(id) {
+            // Textos adaptados para Psicologia
+            const data = { 
+                'cuidados': {t: "Ansiedade e Autocuidado", txt: "A prática regular de exercícios de respiração e pausas durante o trabalho podem reduzir significativamente os níveis de cortisol."},
+                'tendencias': {t: "Mindfulness", txt: "A atenção plena ajuda a focar no momento presente, reduzindo o estresse e melhorando a qualidade do sono e das relações."}
+            };
+            document.getElementById('m-blog-title').innerText = data[id].t;
+            document.getElementById('m-blog-text').innerText = data[id].txt;
+            document.getElementById('blogModal').classList.add('active');
+        }
+
+        // --- CHAT INTERATIVO ADAPTADO ---
+        function initChat() {
+            const chatOpts = document.getElementById('chatOptions');
+            // Opções de texto alteradas, lógica mantida
+            const opts = [
+                {t:"📅 Marcar Consulta", r:"Use o calendário acima ou clique em 'Terapias'."},
+                {t:"📍 Localização", r:"Av. Paulista, 1234 - SP."},
+                {t:"💰 Valores", r:"Sessão individual a partir de R$150."},
+                {t:"🏥 Convênios", r:"Aceitamos Unimed, Bradesco e Amil."},
+                {t:"📞 Emergência", r:"Para emergências, ligue 188 (CVV)."}
+            ];
+            
+            chatOpts.innerHTML = '';
+            opts.forEach(o => {
+                const b = document.createElement('button');
+                b.className = 'quick-btn'; b.innerText = o.t;
+                b.onclick = () => {
+                    const chatBody = document.getElementById('chatBody');
+                    chatBody.innerHTML += `<div class="msg user">${o.t}</div>`;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                    setTimeout(() => {
+                        chatBody.innerHTML += `<div class="msg bot">${o.r}</div>`;
+                        chatBody.scrollTop = chatBody.scrollHeight;
+                    }, 500);
+                }
+                chatOpts.appendChild(b);
+            }); 
+        }
+        function toggleChat() { document.getElementById('chatWindow').classList.toggle('open'); }
+
+        function initNotify() {
+            setInterval(() => {
+                const div = document.createElement('div');
+                div.className = 'notify-card';
+                // Ícone alterado para algo mais clínico
+                div.innerHTML = `<i class="ph ph-calendar-check" style="color:var(--gold);font-size:1.5rem;"></i><div><p style="font-size:0.8rem;color:#333;">Nova consulta agendada!</p></div>`;
+                document.getElementById('notifyStack').appendChild(div);
+                setTimeout(() => div.classList.add('active'), 100);
+                setTimeout(() => { div.classList.remove('active'); setTimeout(() => div.remove(), 500); }, 4000);
+            }, 30000); // Aumentei o tempo para ser menos invasivo
+        }
+    </script>
+</body>
+</html>
